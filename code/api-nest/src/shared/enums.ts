@@ -127,6 +127,10 @@ export enum OrderStatusSmartContract {
   CANCELLED = '3',
 }
 
+export enum Contract {
+  FASTY_TOKEN = 'FastyToken',
+}
+
 export const ContractMethod = {
   READ: {
     GET_GK_ISSUE_ADDRESS: 'getGKIssueAddress',

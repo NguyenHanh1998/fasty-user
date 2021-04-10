@@ -1,6 +1,9 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 export class Causes {
+  /**
+   * common
+   */
   public static INTERNAL_ERROR = new HttpException(
     'Server internal error',
     HttpStatus.INTERNAL_SERVER_ERROR,
@@ -28,6 +31,11 @@ export class Causes {
     'Currency init process was failed',
     HttpStatus.INTERNAL_SERVER_ERROR,
   );
+  public static CAN_NOT_FOUND_ANY_CRAWL_STATUS_RECORD = new HttpException(
+    'Cnnot found any crawl status record',
+    HttpStatus.INTERNAL_SERVER_ERROR,
+  );
+
   /**
    * address
    */
@@ -217,4 +225,16 @@ export class Causes {
   );
   public static ORDER_NOT_FOUND = new HttpException('Order not found', HttpStatus.NOT_FOUND);
   public static RAWTX_INVALID = new HttpException('Rawtx invalid', HttpStatus.BAD_REQUEST);
+  public static CAN_NOT_GET_RAW_TRANSACTION = new HttpException(
+    'Cannot get raw transaction',
+    HttpStatus.INTERNAL_SERVER_ERROR,
+  );
+
+  /**
+   * currency config
+   */
+  public static ADMIN_CURRENCY_NOT_FOUND = new HttpException(
+    'Admin currency not found',
+    HttpStatus.INTERNAL_SERVER_ERROR,
+  );
 }

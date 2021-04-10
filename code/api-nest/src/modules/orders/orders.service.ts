@@ -1,10 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
-import { OrderResponse } from './response/order.dto';
-import { PaginationResponse } from '../../config/rest/paginationResponse';
 import { Repository, getConnection, EntityManager, In } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IPaginationOptions } from 'nestjs-typeorm-paginate';
 import { Causes as InternalException } from '../../config/exception/causes';
 import { getLogger } from '../../shared/logger';
 import { Product, Order, OrderPaymentMethod, OrderTx } from '../../database/entities';
@@ -22,8 +19,9 @@ import { CancelOrder } from './request/cancelOrder.dto';
 import { TakeOrderByEth } from './request/takeOrderByEth.dto';
 import { UpdateOrder } from './request/updateOrder.dto';
 import { Web3Mixin } from '../common/Web3Mixin.service';
+import { toChecksumAddress } from 'web3-utils';
 import EthereumTx from 'ethereumjs-tx';
-import web3 from 'web3';
+import { TransactionByHash } from './response/transactionByHash.dto';
 
 const logger = getLogger('OrdersService');
 
@@ -51,7 +49,7 @@ export class OrdersService {
    * @param data
    */
   async takeOrderByEth(data: TakeOrderByEth) {
-    const { orderId, txid, rawTx } = data;
+    const { orderId, txid } = data;
 
     const order = await this.checkOrderOpen(orderId);
     await this.validateTxidInOrderTx(txid);
@@ -62,17 +60,17 @@ export class OrdersService {
     // if (orderSC.status !== OrderStatusSmartContract.OPEN) {
     //   throw InternalException.ORDER_UNAVAILABLE;
     // }
-    const buyerAddress = this.getFromAddressOfRawTx(rawTx);
+    const buyerAddress = toChecksumAddress((await this.getTransByHashFromFullNode(txid)).from);
     if (buyerAddress === order.sellerAddress) {
       throw InternalException.BUYER_CAN_NOT_BE_OWNER;
     }
 
     // check to address
-    const checkToAddress = await this.checkToAddressWithGKAddress(rawTx);
+    const checkToAddress = await this.checkToAddressWithFTAddress(txid);
     if (!checkToAddress) {
       throw InternalException.TO_ADDRESS_HAVE_TO_GK_CONTRACT;
     }
-    const gkContract = this.getToAddressOfRawTx(rawTx);
+    const gkContract = toChecksumAddress((await this.getTransByHashFromFullNode(txid)).to);
 
     const orderPayment = await this.orderPaymentMethodsRepository.findOne({
       orderId,
@@ -104,13 +102,13 @@ export class OrdersService {
    * @param data
    */
   async createOrder(data: CreateOrder) {
-    const { orderId, productId, rawTx } = data;
+    const { orderId, productId, txid } = data;
     const orderExist = await this.ordersRepository.findOne(orderId);
     if (orderExist) {
       throw InternalException.ORDER_CREATED;
     }
-
-    const sellerAddress = this.getFromAddressOfRawTx(rawTx);
+    //call infura to get rawTx
+    const sellerAddress = toChecksumAddress((await this.getTransByHashFromFullNode(txid)).from);
 
     if (!productId) {
       throw InternalException.PRODUCT_ID_REQUIRED;
@@ -121,16 +119,16 @@ export class OrdersService {
       throw InternalException.PRODUCT_NOT_FOUND;
     }
 
-    const ownerAddress = await this.getOwnerOfBundle(productId);
+    const ownerAddress = await this.getOwnerOfProduct(productId);
     if (!ownerAddress) {
       throw InternalException.PRODUCT_HAVE_MANY_OWNER;
     }
-    if (sellerAddress !== web3.utils.toChecksumAddress(ownerAddress)) {
+    if (sellerAddress !== toChecksumAddress(ownerAddress)) {
       throw InternalException.SELLER_IS_NOT_OWNERSHIP;
     }
 
     // check to address
-    const checkToAddress = await this.checkToAddressWithGKAddress(rawTx);
+    const checkToAddress = await this.checkToAddressWithFTAddress(txid);
     if (!checkToAddress) {
       throw InternalException.TO_ADDRESS_HAVE_TO_GK_CONTRACT;
     }
@@ -182,6 +180,20 @@ export class OrdersService {
     });
   }
 
+  async getTransByHashFromFullNode(txid: string): Promise<TransactionByHash> {
+    let rawTransaction = null;
+    try {
+      rawTransaction = await this.web3Mixin.getTransactionByHash(txid);
+      if (!rawTransaction) {
+        throw InternalException.CAN_NOT_GET_RAW_TRANSACTION;
+      }
+    } catch (error) {
+      logger.error(`Cannot get raw transaction by hash due to ${error}`);
+      return;
+    }
+    return new TransactionByHash(rawTransaction.data.result);
+  }
+
   /**
    * Tasks of this function:
    * - insert data to order_tx table
@@ -190,19 +202,19 @@ export class OrdersService {
    * @param data
    */
   async updateOrder(data: UpdateOrder) {
-    const { orderId, txid, rawTx } = data;
+    const { orderId, txid } = data;
     const type = OrderTxType.OrderUpdate;
 
     const order = await this.checkOrderOpen(orderId);
     await this.validateTxidInOrderTx(txid);
 
-    const sellerAddress = this.getFromAddressOfRawTx(rawTx);
+    const sellerAddress = toChecksumAddress((await this.getTransByHashFromFullNode(txid)).from);
     if (!this.checkOrderOwner(orderId, sellerAddress)) {
       throw InternalException.ORDER_UNAUTHORIZED;
     }
 
     // check to address
-    const checkToAddress = await this.checkToAddressWithGKAddress(rawTx);
+    const checkToAddress = toChecksumAddress((await this.getTransByHashFromFullNode(txid)).to);
     if (!checkToAddress) {
       throw InternalException.TO_ADDRESS_HAVE_TO_GK_CONTRACT;
     }
@@ -263,7 +275,7 @@ export class OrdersService {
     }
 
     // check to address
-    const checkToAddress = await this.checkToAddressWithGKAddress(rawTx);
+    const checkToAddress = await this.checkToAddressWithFTAddress(txid);
     if (!checkToAddress) {
       throw InternalException.TO_ADDRESS_HAVE_TO_GK_CONTRACT;
     }
@@ -304,12 +316,12 @@ export class OrdersService {
     if (!productId) {
       throw InternalException.PRODUCT_ID_REQUIRED;
     }
-    const product = await this.productsRepository.findOne(productId);
+    const product = await this.productsRepository.findOne({ id: productId });
     if (!product) {
       throw InternalException.PRODUCT_NOT_FOUND;
     }
 
-    await manager.update(Product, { productId }, { status: ProductStatus.CONFIRMING });
+    await manager.update(Product, { id: productId }, { status: ProductStatus.CONFIRMING });
 
     if (product.status === ProductStatus.OFFSALE || product.status === ProductStatus.ONSALE) {
       await manager.update(Product, { id: productId }, { status: ProductStatus.CONFIRMING });
@@ -344,10 +356,7 @@ export class OrdersService {
     if (!order) {
       throw InternalException.ORDER_NOT_FOUND;
     }
-    if (
-      web3.utils.toChecksumAddress(order.sellerAddress) ===
-      web3.utils.toChecksumAddress(requestAddress)
-    ) {
+    if (toChecksumAddress(order.sellerAddress) === toChecksumAddress(requestAddress)) {
       return true;
     }
 
@@ -377,7 +386,7 @@ export class OrdersService {
     return ownerAddress === contractAddress ? true : false;
   }
 
-  async getOwnerOfBundle(productId: number): Promise<string> {
+  async getOwnerOfProduct(productId: number): Promise<string> {
     const product = await this.productsRepository.findOne({
       id: productId,
     });
@@ -395,7 +404,7 @@ export class OrdersService {
     } catch (err) {
       throw InternalException.RAWTX_INVALID;
     }
-    return web3.utils.toChecksumAddress(sellerAddress);
+    return toChecksumAddress(sellerAddress);
   }
 
   getToAddressOfRawTx(rawTx: string): string {
@@ -410,11 +419,11 @@ export class OrdersService {
     } catch (err) {
       throw InternalException.RAWTX_INVALID;
     }
-    return web3.utils.toChecksumAddress(sellerAddress);
+    return toChecksumAddress(sellerAddress);
   }
 
-  async checkToAddressWithGKAddress(rawTx: string): Promise<boolean> {
-    const toAddress = this.getToAddressOfRawTx(rawTx);
+  async checkToAddressWithFTAddress(txid: string): Promise<boolean> {
+    const toAddress = toChecksumAddress((await this.getTransByHashFromFullNode(txid)).to);
     const contractAddress = await this.web3Mixin.getContractAddress();
 
     return toAddress === contractAddress;

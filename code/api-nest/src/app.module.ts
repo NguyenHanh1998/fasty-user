@@ -5,28 +5,23 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { databaseConfig } from './config/database.config';
-<<<<<<< HEAD
 import { ExceptionFilter } from './config/exception/exception.filter';
 import { TransformInterceptor } from './config/rest/transform.interceptor';
 import { AuthModule } from './modules/auth/auth.module';
 import { CratesModule } from './modules/crates/crates.module';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
 import { ProductsModule } from './modules/products/products.module';
-=======
-import { AuthModule } from './modules/auth/auth.module';
->>>>>>> feat: update module auth<user>
+import { OrdersModule } from './modules/orders/orders.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot(databaseConfig),
     AuthModule,
-<<<<<<< HEAD
     CratesModule,
     SubscriptionsModule,
     ProductsModule,
-=======
->>>>>>> feat: update module auth<user>
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [
