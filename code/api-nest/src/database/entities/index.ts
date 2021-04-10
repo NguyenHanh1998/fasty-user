@@ -5,3 +5,5 @@ export * from './Crate.entity';
 export * from './Order.entity';
 export * from './OrderTx.entity';
 export * from './OrderPaymentMethod.entity';
+export * from './CrawlStatus.entity';
+export * from './CurrencyConfig.entity';
