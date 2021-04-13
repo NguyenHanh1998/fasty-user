@@ -28,17 +28,17 @@ export function getList(isLoading = true, forceRefresh = false) {
       isLoading
     })
 
-    return axios.post(routeApi, query({
-      operation: 'products',
-      fields: ['id', 'name', 'slug', 'description', 'image', 'createdAt', 'updatedAt']
-    }))
+    return axios({
+      method: 'get',
+      url: `${routeApi}/products`
+    })
       .then(response => {
         if (response.status === 200) {
           dispatch({
             type: PRODUCTS_GET_LIST_RESPONSE,
             error: null,
             isLoading: false,
-            list: response.data.data.products
+            list: response.data.data
           })
         } else {
           dispatch({
@@ -66,11 +66,10 @@ export function get(slug, isLoading = true) {
       isLoading
     })
 
-    return axios.post(routeApi, query({
-      operation: 'product',
-      variables: { slug },
-      fields: ['id', 'name', 'slug', 'description', 'image', 'createdAt']
-    }))
+    return axios({
+      method: 'get',
+      url: `${routeApi}/products?slug=${slug}`
+    })
       .then(response => {
         if (response.status === 200) {
           if (response.data.errors && response.data.errors.length > 0) {
@@ -84,7 +83,7 @@ export function get(slug, isLoading = true) {
               type: PRODUCTS_GET_RESPONSE,
               error: null,
               isLoading: false,
-              item: response.data.data.product
+              item: response.data.data[0]
             })
           }
         } else {
@@ -128,18 +127,17 @@ export function getRelatedList(productId, isLoading = true) {
         isLoading
       })
 
-      return axios.post(routeApi, query({
-        operation: 'productsRelated',
-        variables: { productId },
-        fields: ['id', 'name', 'slug', 'description', 'image']
-      }))
+      return axios({
+        method: 'get',
+        url: `${routeApi}/products/related/${productId}`
+      })
         .then(response => {
           if (response.status === 200) {
             dispatch({
               type: PRODUCTS_GET_RELATED_LIST_RESPONSE,
               error: null,
               isLoading: false,
-              list: response.data.data.productsRelated,
+              list: response.data.data,
               productId
             })
           } else {

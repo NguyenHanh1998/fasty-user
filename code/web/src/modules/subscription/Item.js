@@ -37,7 +37,7 @@ class Item extends PureComponent {
 
       this.props.messageShow('Subscribing, please wait...')
 
-      this.props.remove({id})
+      this.props.remove(id)
         .then(response => {
           if (response.data.errors && response.data.errors.length > 0) {
             this.props.messageShow(response.data.errors[0].message)

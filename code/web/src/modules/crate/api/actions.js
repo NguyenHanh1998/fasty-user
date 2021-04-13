@@ -24,18 +24,14 @@ export function getList(orderBy = 'DESC', isLoading = true) {
       isLoading
     })
 
-    return axios.post(routeApi, query({
-      operation: 'crates',
-      variables: { orderBy },
-      fields: ['id', 'name', 'description', 'createdAt', 'updatedAt']
-    }))
+    return axios.get(`${routeApi}/crates`)
       .then(response => {
         if (response.status === 200) {
           dispatch({
             type: CRATES_GET_LIST_RESPONSE,
             error: null,
             isLoading: false,
-            list: response.data.data.crates
+            list: response.data.data
           })
         } else {
           console.error(response)

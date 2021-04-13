@@ -46,7 +46,9 @@ class Item extends PureComponent {
         }
       })
       .catch(error => {
-        this.props.messageShow('There was some error subscribing to this crate. Please try again.')
+        if(error.response) {
+          this.props.messageShow(error.response.data.meta.message + '. Please try again!')
+        }
       })
       .then(() => {
         this.setState({

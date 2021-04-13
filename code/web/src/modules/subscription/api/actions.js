@@ -63,17 +63,17 @@ export function getListByUser(isLoading = true) {
       isLoading
     })
 
-    return axios.post(routeApi, query({
-      operation: 'subscriptionsByUser',
-      fields: ['id', 'user { name, email }', 'crate { id, name, description }', 'createdAt']
-    }))
+    return axios({
+      method: 'get',
+      url: `${routeApi}/subscriptions`
+    })
       .then(response => {
         if (response.status === 200) {
           dispatch({
             type: SUBSCRIPTIONS_GET_LIST_BY_USER_RESPONSE,
             error: null,
             isLoading: false,
-            list: response.data.data.subscriptionsByUser
+            list: response.data.data
           })
         } else {
           console.error(response)
@@ -123,21 +123,19 @@ export function get(slug, isLoading = true) {
 // Create subscription
 export function create(variables) {
   return dispatch => {
-    return axios.post(routeApi, mutation({
-      operation: 'subscriptionCreate',
-      variables,
-      fields: ['id']
-    }))
+    return axios({
+      method: 'post',
+      url: `${routeApi}/subscriptions/${variables.crateId}`
+    })
   }
 }
 
 // Remove subscription
-export function remove(variables) {
+export function remove(id) {
   return dispatch => {
-    return axios.post(routeApi, mutation({
-      operation: 'subscriptionRemove',
-      variables,
-      fields: ['id']
-    }))
+    return axios({
+      method: 'post',
+      url: `${routeApi}/subscriptions/remove/${id}`
+    })
   }
 }

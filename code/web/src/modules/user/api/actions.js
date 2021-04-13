@@ -33,19 +33,22 @@ export function login(userCredentials, isLoading = true) {
       isLoading
     })
 
-    return axios.post(routeApi, query({
-      operation: 'userLogin',
-      variables: userCredentials,
-      fields: ['user {name, email, role}', 'token']
-    }))
+    return axios({
+      method: 'post',
+      url: `${routeApi}/login`,
+      data: {
+        email: userCredentials.email,
+        password: userCredentials.password
+      }
+    })
       .then(response => {
         let error = ''
 
         if (response.data.errors && response.data.errors.length > 0) {
           error = response.data.errors[0].message
-        } else if (response.data.data.userLogin.token !== '') {
-          const token = response.data.data.userLogin.token
-          const user = response.data.data.userLogin.user
+        } else if (response.data.data.token !== '') {
+          const token = response.data.data.token
+          const user = response.data.data.user
 
           dispatch(setUser(token, user))
 
