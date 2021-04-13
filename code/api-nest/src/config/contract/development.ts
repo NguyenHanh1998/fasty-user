@@ -8,7 +8,7 @@ module.exports = {
     FastyToken: {
       CONTRACT_DATA: require('./abi/FastyToken.json'),
       // CONTRACT_ADDRESS: '0x2468b3858e6D9B44ddA06639B8b1780663D88dc2',
-      FIRST_CRAWL_BLOCK: 6793874,
+      FIRST_CRAWL_BLOCK: 8371900,
       BLOCK_NUM_IN_ONE_GO: 5,
       BREAK_TIME_AFTER_ONE_GO: 1000,
       NEED_NOTIFY_BY_WEBHOOK: true,
