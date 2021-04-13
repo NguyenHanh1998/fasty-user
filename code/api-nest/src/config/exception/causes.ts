@@ -172,12 +172,19 @@ export class Causes {
    */
   public static CRATE_NOT_FOUND = new HttpException('Crate not found', HttpStatus.NOT_FOUND);
 
+  public static CRATE_INVALID = new HttpException('Crate is not valid', HttpStatus.BAD_REQUEST);
+
   /**
    * subscription
    */
   public static SUBSCRIPTION_NOT_FOUND = new HttpException(
     'Subscription not found',
     HttpStatus.NOT_FOUND,
+  );
+
+  public static SUBSCRIPTION_WITH_CRATE_EXISTED = new HttpException(
+    'Subscription with crate id existed',
+    HttpStatus.BAD_REQUEST,
   );
 
   /**
