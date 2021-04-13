@@ -12,11 +12,16 @@ import { CratesModule } from './modules/crates/crates.module';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
 import { ProductsModule } from './modules/products/products.module';
 import { OrdersModule } from './modules/orders/orders.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot(databaseConfig),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+    }),
     AuthModule,
     CratesModule,
     SubscriptionsModule,
