@@ -6,7 +6,7 @@ import { PaginationResponse } from 'src/config/rest/paginationResponse';
 import { Product } from 'src/database/entities';
 import { logger } from 'src/shared/logger';
 import { checkIPaginationOptions, getArrayPagination } from 'src/shared/Utils';
-import { Raw, Repository } from 'typeorm';
+import { Not, Raw, Repository } from 'typeorm';
 import { ProductDetails } from './response/productDetails.dto';
 
 @Injectable()
@@ -51,6 +51,21 @@ export class ProductsService {
       results: result,
       pagination: paginatedResult.meta,
     };
+  }
+
+  async getRelatedProducts(productId: number): Promise<Array<ProductDetails>> {
+    const products = await this.productsRepository.find({
+      where: {
+        id: Not(productId),
+      },
+      take: 5,
+    });
+
+    const result = products.map((product) => {
+      return new ProductDetails(product);
+    });
+
+    return result;
   }
 
   async getProductDetails(productId: number): Promise<ProductDetails> {

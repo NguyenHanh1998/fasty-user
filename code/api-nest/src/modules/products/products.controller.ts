@@ -53,6 +53,22 @@ export class ProductsController {
     return this.productsService.getAllProducts({ slug, type }, { page, limit });
   }
 
+  @Get('/related/:product_id')
+  @ApiOperation({
+    tags: ['products'],
+    operationId: 'getRelatedProducts',
+    summary: 'Get related products',
+    description: 'Get related products',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Successful',
+    type: ProductsBase,
+  })
+  async getRelatedProducts(@Param('product_id') productId: number): Promise<Array<ProductDetails>> {
+    return this.productsService.getRelatedProducts(productId);
+  }
+
   @Get('/:product_id')
   @ApiOperation({
     tags: ['products'],
