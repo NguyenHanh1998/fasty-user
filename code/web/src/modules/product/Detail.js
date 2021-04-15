@@ -10,6 +10,9 @@ import { Grid, GridCell } from '../../ui/grid'
 import Card from '../../ui/card/Card'
 import { H2, H3, H4 } from '../../ui/typography'
 import { grey, grey2 } from '../../ui/common/colors'
+import Button from '../../ui/button'
+import Icon from '../../ui/icon'
+import { white } from '../../ui/common/colors'
 
 // App Imports
 import { routeImage, routes } from '../../setup/routes'
@@ -86,6 +89,8 @@ class Detail extends PureComponent {
                         <p style={{ marginTop: '0.5em', color: grey2 }}>
                           Launched on { new Date(parseInt(item.createdAt)).toDateString() }
                         </p>
+
+                        <Button theme="primary" style={{ marginTop: '10em' }}>Buy Now <Icon size={1.2} style={{ color: white }}>navigate_next</Icon></Button>
                       </GridCell>
                     </Grid>
 
