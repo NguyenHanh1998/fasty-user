@@ -17,6 +17,7 @@ import admin from '../../../setup/routes/admin'
 import Logo from './Logo'
 import Menu from './Menu'
 import MenuItem from './MenuItem'
+import wallet from '../../../setup/routes/wallet'
 
 // Component
 const Header = (props) => {
@@ -55,6 +56,8 @@ const Header = (props) => {
               ?
               <Menu>
                 { props.user.details.role === 'ADMIN' && <MenuItem to={admin.dashboard.path} section="admin">Admin</MenuItem> }
+
+                <MenuItem to={wallet.walletList.path}>My Wallets</MenuItem>
 
                 <MenuItem to={crate.list.path}>Crates</MenuItem>
 
