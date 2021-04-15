@@ -7,7 +7,7 @@ import { grey2, grey4, black } from '../common/colors'
 
 // Component
 const Input = (props) => {
-  const { type, fullWidth, ...other } = props
+  const { type, fullWidth, placeholderTextColor, ...other } = props
 
   return (
     <div>
@@ -22,7 +22,7 @@ const Input = (props) => {
           font-size: 1em;
           border: none;
           background-color: transparent;
-          color: ${ black };
+          color: ${ placeholderTextColor ? placeholderTextColor : black };
           border-bottom: 1px solid ${ grey2 };
           width: ${ fullWidth ? '100%' : 'auto' };
         }

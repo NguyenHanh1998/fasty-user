@@ -1,10 +1,15 @@
 // Imports
 import React from 'react'
 import PropTypes from 'prop-types'
+import { H4 } from '../typography'
+import { black, white } from '../common/colors'
+import { Input } from '../input'
+import Button from '../button'
+import Icon from '../icon'
 
 // Component
 const Modal = (props) => {
-  const { children, visible, ...other } = props
+  const { children, visible, title, ...other } = props
 
   return (
     <div {...other} style={{
@@ -19,7 +24,7 @@ const Modal = (props) => {
       transition: 'opacity 0.25s ease-in-out'
     }}>
       <div style={{
-        background: `url('/images/cover.jpg') top center`,
+        backgroundColor: 'rgba(0,0,0,.45)',
         backgroundSize: 'cover',
         position: 'fixed',
         top: '-40px',
@@ -31,6 +36,7 @@ const Modal = (props) => {
       }}/>
 
       {children}
+      
     </div>
   )
 }
