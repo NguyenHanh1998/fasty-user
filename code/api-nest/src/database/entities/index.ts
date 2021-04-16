@@ -19,3 +19,4 @@ export * from './Withdrawal.entity';
 export * from './WithdrawalLog.entity';
 export * from './WithdrawalTx.entity';
 export * from './EnvConfig.entity';
+export * from './Address.entity';

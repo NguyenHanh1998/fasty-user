@@ -20,6 +20,7 @@ import {
   WithdrawalTx,
   EventLog,
   EnvConfig,
+  Address,
 } from 'src/database/entities';
 import { ConnectionOptions } from 'typeorm';
 
@@ -52,6 +53,7 @@ export const databaseConfig: ConnectionOptions = {
     WithdrawalTx,
     EventLog,
     EnvConfig,
+    Address,
   ],
   synchronize: true,
 };
