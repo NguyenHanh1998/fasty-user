@@ -1,4 +1,4 @@
-import { Body, Controller, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { User } from 'src/database/entities';
 import { UserDecorator } from 'src/shared/decorator/user.decorator';
@@ -16,13 +16,13 @@ export class AddressesController {
   @Post('/create')
   @ApiOperation({
     tags: ['addresses'],
-    operationId: 'createANewAddress',
-    summary: 'Create a new address',
-    description: 'Create a new address',
+    operationId: 'createNewAddress',
+    summary: 'Create new address',
+    description: 'Create new address',
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'SUccessful',
+    description: 'Successful',
     type: CreateAddressBase,
   })
   async createNewAddress(
@@ -30,5 +30,21 @@ export class AddressesController {
     @UserDecorator() user: User,
   ): Promise<CreateAddress> {
     return this.addressesService.createNewAddress(data, user);
+  }
+
+  @Get('')
+  @ApiOperation({
+    tags: ['addresses'],
+    operationId: 'getOneAddress',
+    summary: 'Get one address',
+    description: 'Get one address',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Successful',
+    type: CreateAddressBase,
+  })
+  async getOneAddress(@UserDecorator() user: User): Promise<CreateAddress> {
+    return this.addressesService.getOneAddress(user);
   }
 }

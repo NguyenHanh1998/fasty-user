@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { add } from 'lodash';
 import { Causes } from 'src/config/exception/causes';
 import { Address, User, Wallet } from 'src/database/entities';
 import { Currency } from 'src/shared/enums';
@@ -35,5 +36,18 @@ export class AddressesService {
 
     addressRecord = await this.addressesRepository.save(addressRecord);
     return new CreateAddress(addressRecord);
+  }
+
+  async getOneAddress(user: User): Promise<CreateAddress> {
+    const wallet = await this.walletsRepository.findOne({ userId: user.id });
+    if (!wallet) {
+      throw Causes.WALLET_WITH_USER_ID_NOT_EXISTED;
+    }
+
+    const address = await this.addressesRepository.findOne({ walletId: wallet.id });
+    if (!address) {
+      throw Causes.ADDRESS_NOT_FOUND;
+    }
+    return new CreateAddress(address);
   }
 }
