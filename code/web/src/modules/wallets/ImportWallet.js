@@ -51,7 +51,24 @@ export class ImportWallet extends PureComponent {
 
     this.props.messageShow('Importing, please wait...')
 
-    this.props.importWallet(this.state.privateKey);
+    this.props.importWallet(this.state.privateKey)
+      .then(response => {
+        if(this.props.wallet.error && this.props.user.error.length > 0) {
+          this.props.messageShow(this.props.wallet.error)
+
+          window.setTimeout(() => {
+            this.props.messageHide()
+          }, 5000)
+        } else {
+          this.props.messageHide()
+        }
+      }).catch(err => {
+        this.props.messageShow(this.props.wallet.error)
+
+        window.setTimeout(() => {
+          this.props.messageHide()
+        }, 5000)
+      })
   }
 
   renderModalChildren = () => {

@@ -6,7 +6,7 @@ import { level1 } from '../common/shadows'
 
 // Component
 const Card = (props) => {
-  const { children, ...other } = props
+  const { children, boxShadow, ...other } = props
 
   return (
     <div {...other}>
@@ -17,7 +17,7 @@ const Card = (props) => {
         div {
           border-radius: 0.2em;
           font-family: 'Roboto', sans-serif;
-          box-shadow: ${ level1 };
+          box-shadow: ${ boxShadow ? boxShadow : level1 };
         }
         `}
       </style>

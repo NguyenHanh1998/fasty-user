@@ -1,5 +1,0 @@
-export const ERROR_TYPES = {
-  REQUIRED_PRIVATE_KEY: 'REQUIRED_PRIVATE_KEY',
-}
-
-export default ERROR_TYPES;

@@ -9,7 +9,7 @@ import wallet from '../../setup/routes/wallet'
 
 // Component
 const WalletCheck = (props) => (
-  (props.wallet.details) ? <Redirect to={wallet.walletList.path}/> : ''
+  (props.wallet.details && props.wallet.details.ethAddress) ? <Redirect to={wallet.walletList.path}/> : ''
 )
 
 // Component Properties

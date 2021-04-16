@@ -22,6 +22,7 @@ var filesToCache = [
   '/css/reset.css',
   '/css/common.css',
   '/css/common.css',
+  '/assets/scss/app.scss',
   '/images/collage.png'
 ];
 

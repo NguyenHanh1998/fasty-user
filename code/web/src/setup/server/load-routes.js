@@ -13,6 +13,7 @@ import { APP_URL, NODE_ENV } from '../config/env'
 import { rootReducer } from '../store'
 import { routes } from '../routes'
 import { setUser } from '../../modules/user/api/actions'
+import { SET_WALLET } from '../../modules/wallets/api/actions'
 import App from '../client/App'
 import view from '../server/view'
 
@@ -35,6 +36,14 @@ export default function (app) {
       if (auth && auth.token !== '' && auth.user) {
         store.dispatch(setUser(auth.token, auth.user))
       }
+    }
+
+    if(request.cookies.wallet) {
+      const wallet = JSON.parse(request.cookies.wallet)
+      store.dispatch({
+        type: SET_WALLET,
+        wallet
+      })
     }
 
     // HTTP status code

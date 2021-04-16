@@ -1,9 +1,14 @@
-import ERROR_TYPES from '../../../configs/errorTypes'
+import axios from 'axios'
+
 import { EthService } from '../../../services/eth'
+import { routeApi } from '../../../setup/routes'
 
 export const IMPORT_WALLET = 'IMPORT_WALLET'
 export const IMPORT_WALLET_RESPONSE = 'IMPORT_WALLET_RESPONSE'
+export const GET_ONE_ADDRESS = 'GET_ONE_ADDRESS'
 export const SET_WALLET = 'SET_WALLET'
+export const GET_ADDRESS_BALANCE_REQUEST = 'GET_ADDRESS_BALANCE_REQUEST'
+export const GET_ADDRESS_BALANCE_RESPONSE = 'GET_ADDRESS_BALANCE_RESPONSE'
 
 const ethService = new EthService();
 
@@ -35,11 +40,35 @@ export function importWallet(privateKey, isLoading = true) {
       } else {
         try{
           const { ethAddress } = ethService.importWalletByPrivateKey(privateKeyFormat);
-          const wallet = { privateKeyFormat, ethAddress }
-          dispatch({
-            type: SET_WALLET,
-            wallet
+
+          return axios({
+            method: 'post',
+            url: `${routeApi}/addresses/create`,
+            data: {
+              privateKey: privateKeyFormat,
+              address: ethAddress
+            }
           })
+            .then(response => {
+              let error = ''
+      
+              if(response.data.errors && response.data.errors.length > 0) {
+                error = response.data.errors[0].message
+              } else if (response.data.data.address !== '') {
+                const address = response.data.data.address
+                const wallet = { ethAddress: address }
+                dispatch({
+                  type: SET_WALLET,
+                  wallet
+                })
+              }
+            })
+            .catch(error => {
+              dispatch({
+                type: IMPORT_WALLET_RESPONSE,
+                error: `${error}.Please try again!`,
+              })
+            }) 
         } catch(err) {
           dispatch({
             type: IMPORT_WALLET_RESPONSE,
@@ -47,7 +76,62 @@ export function importWallet(privateKey, isLoading = true) {
           })
         }
       }
+
+
     }
   }
 
+}
+
+export function getOneAddress() {
+  return dispatch => {
+    dispatch({
+      type: GET_ONE_ADDRESS,
+      isLoading: true
+    })
+
+    return axios({
+      method: 'get',
+      url: `${routeApi}/addresses`
+    })
+    .then(response => {
+      let error = ''
+
+      if(response.data.errors && response.data.errors.length > 0) {
+        error = response.data.errors[0].message
+      } else if (response.data.data.address !== '') {
+        const address = response.data.data.address
+        const wallet = { ethAddress: address }
+        dispatch({
+          type: SET_WALLET,
+          wallet
+        })
+      }
+    })
+    .catch(error => {
+      dispatch({
+        type: IMPORT_WALLET_RESPONSE,
+        error: `${error}.Please try again!`,
+      })
+    }) 
+  }
+}
+
+export function getAddressBalance(ethAddress, isLoading = true) {
+  return async dispatch => {
+    dispatch({
+      type: GET_ADDRESS_BALANCE_REQUEST,
+      isLoading
+    })
+
+    try{
+      const addressBalance = await ethService.getAddressBalance(ethAddress);
+      dispatch({
+        type: SET_WALLET,
+        wallet: { ethAddress, balance: addressBalance.balance} 
+      })
+    } catch(err) {
+      dispatch
+    }
+  }
 }

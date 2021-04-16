@@ -5,12 +5,13 @@ import cookie from 'js-cookie'
 
 // App Imports
 import { routeApi } from '../../../setup/routes'
-
 // Actions Types
 export const LOGIN_REQUEST = 'AUTH/LOGIN_REQUEST'
 export const LOGIN_RESPONSE = 'AUTH/LOGIN_RESPONSE'
 export const SET_USER = 'AUTH/SET_USER'
 export const LOGOUT = 'AUTH/LOGOUT'
+
+import { SET_WALLET } from '../../wallets/api/actions'
 
 // Actions
 
@@ -49,8 +50,17 @@ export function login(userCredentials, isLoading = true) {
         } else if (response.data.data.token !== '') {
           const token = response.data.data.token
           const user = response.data.data.user
+          const address = response.data.data.address
 
           dispatch(setUser(token, user))
+
+          const wallet = { ethAddress: address }
+          dispatch({
+            type: SET_WALLET,
+            wallet
+          })
+
+          setWalletLocalStorageAndCookie(wallet)
 
           loginSetUserLocalStorageAndCookie(token, user)
         }
@@ -77,6 +87,11 @@ export function loginSetUserLocalStorageAndCookie(token, user) {
 
   // Set cookie for SSR
   cookie.set('auth', { token, user }, { path: '/' })
+}
+
+export function setWalletLocalStorageAndCookie(wallet) {
+  window.localStorage.setItem('wallet', wallet)
+  cookie.set('wallet',JSON.stringify(wallet), { path: '/' })
 }
 
 // Register a user

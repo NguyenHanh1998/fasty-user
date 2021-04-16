@@ -9,11 +9,57 @@ import { connect } from 'react-redux'
 import userRoutes from '../../setup/routes/user'
 import walletRoutes from '../../setup/routes/wallet'
 import Icon from '../../ui/icon'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import Button from '../../ui/button'
+import Loading from '../common/Loading'
+import EmptyMessage from '../common/EmptyMessage'
+import { getOneAddress, getAddressBalance } from './api/actions'
+import { messageShow, messageHide } from '../common/api/actions'
 
 class MyWalletsList extends PureComponent {
+
+
+  refresh = (ethAddress) => {
+    //call web3 to get balance wallet
+    this.props.getAddressBalance(ethAddress);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.wallet.details.ethAddress !== this.props.wallet.details.ethAddress) {
+      this.refresh(nextProps.wallet.details.ethAddress)
+    }
+  }
+
+  componentDidMount() {
+    if(!this.props.wallet.details.ethAddress) {
+      this.props.getOneAddress()
+      .then(response => {
+        if(this.props.wallet.error && this.props.user.error.length > 0) {
+          this.props.messageShow(this.props.wallet.error)
+
+          window.setTimeout(() => {
+            this.props.messageHide()
+          }, 5000)
+        } else {
+          this.props.messageHide()
+        }
+      }).catch(err => {
+        this.props.messageShow(this.props.wallet.error)
+
+        window.setTimeout(() => {
+          this.props.messageHide()
+        }, 5000)
+      })
+    } else {
+      const ethAddress = this.props.wallet.details.ethAddress
+      if(ethAddress) {
+        this.refresh(ethAddress);
+      }
+    }
+  }
+
   render() {
+    const { isLoading, details } = this.props.wallet
     return (
       <div>
         {/* SEO */}
@@ -32,9 +78,18 @@ class MyWalletsList extends PureComponent {
 
         {/* Wallets list */}
         <Grid>
-          <GridCell style={{ textAlign: 'center'}}>
-            <WalletItem />
-          </GridCell>
+          {
+            isLoading
+              ? <Loading />
+              : details
+                ?
+                <GridCell>
+                  <WalletItem ethAddress={details.ethAddress} balance={details.balance}/>
+                </GridCell>
+                : <GridCell>
+                    <EmptyMessage message="No wallet imported!" />
+                </GridCell>
+          }
         </Grid>
 
         {/* Bottom call to action bar */}
@@ -62,7 +117,11 @@ class MyWalletsList extends PureComponent {
 
 MyWalletsList.propTypes = {
   user: PropTypes.object.isRequired,
-  wallet: PropTypes.object.isRequired
+  wallet: PropTypes.object.isRequired,
+  getOneAddress: PropTypes.func.isRequired,
+  messageShow: PropTypes.func.isRequired,
+  messageHide: PropTypes.func.isRequired,
+  getAddressBalance: PropTypes.func.isRequired
 }
 
 function myWalletsList(state) {
@@ -72,4 +131,4 @@ function myWalletsList(state) {
   }
 }
 
-export default connect(myWalletsList)(MyWalletsList)
+export default withRouter(connect(myWalletsList, { getOneAddress, getAddressBalance, messageShow, messageHide })(MyWalletsList))
