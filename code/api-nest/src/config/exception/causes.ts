@@ -74,6 +74,14 @@ export class Causes {
     'Wallet with currency existed',
     HttpStatus.BAD_REQUEST,
   );
+  public static WALLET_WITH_USER_ID_EXISTED = new HttpException(
+    'Wallet with user id existed',
+    HttpStatus.BAD_REQUEST,
+  );
+  public static WALLET_WITH_USER_ID_NOT_EXISTED = new HttpException(
+    'Wallet with user id is not existed',
+    HttpStatus.INTERNAL_SERVER_ERROR,
+  );
   /**
    * hot wallet
    */

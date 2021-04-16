@@ -3,6 +3,12 @@ import { User } from 'src/database/entities';
 
 export class UserDetails {
   @ApiProperty({
+    type: Number,
+    example: 1,
+  })
+  id: number;
+
+  @ApiProperty({
     type: String,
     example: 'example@gmail.com',
   })
@@ -30,6 +36,12 @@ export class LoginResponse {
     type: UserDetails,
   })
   user: UserDetails;
+
+  @ApiProperty({
+    type: String,
+    example: '0x99c4efe10892b960C37DfB3AB1E0459e926F7F37',
+  })
+  address: string;
 
   @ApiProperty({
     type: String,

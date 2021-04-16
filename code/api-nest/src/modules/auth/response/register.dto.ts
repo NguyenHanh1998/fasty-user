@@ -18,4 +18,10 @@ export class RegisterResponse {
     example: 'gakki',
   })
   username: string;
+
+  @ApiProperty({
+    type: Number,
+    example: 1,
+  })
+  walletId: number;
 }

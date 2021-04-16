@@ -157,3 +157,7 @@ export const ContractMethod = {
     SET_BASE_URI: 'setBaseUri',
   },
 };
+
+export enum WithdrawalMode {
+  NORMAL = 'normal',
+}
