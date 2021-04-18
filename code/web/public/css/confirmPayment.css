@@ -1,0 +1,229 @@
+.container-md {
+  width: 100%;
+  max-width: 1355px;
+  padding: 26px 60px;
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+.information-wallet {
+  margin-left: 0!important;
+  margin-right: 0!important;
+  display: flex;
+}
+
+.information-wallet__list-card{
+  justify-content: space-between;
+}
+
+.information-wallet__list-card > .card {
+  border-radius: 10px;
+  padding: 40px!important;
+  color: #fff;
+  font-size: 16px;
+  display: flex;
+  max-width: calc(25% - 16.9425px);
+  flex: 0 0 33.33333333%;
+}
+
+.information-wallet__list-card .card-1 {
+  background-image: linear-gradient( 90deg, #CE9FFC 10%, #7367F0 100%);;
+}
+
+.information-wallet__list-card .card .icon {
+  max-width: 80px;
+  height: auto;
+  margin-right: 20px;
+}
+
+.information-wallet__list-card .card .label {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.information-wallet__list-card .card .value {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+  margin-top: 20px;
+}
+
+.information-wallet__list-card .card-2 {
+  background-color: rgba(219,63,40,.9);
+}
+
+.information-wallet__list-card .card-3 {
+  background-color: #3e3a39;
+}
+
+.confirm {
+  box-sizing: border-box;
+  background-color: #fff;
+}
+
+.confirm .form {
+  box-shadow: 0 0 20px rgba(0,0,0,.1);
+  border-radius: 30px;
+  padding: 41px 85px;
+  color: #3e3a39;
+  margin: 50px auto;
+}
+
+.ant-col-xl-16 {
+  display: block;
+  -ms-flex: 0 0 66.66666667%;
+  flex: 0 0 66.66666667%;
+  max-width: 100%;
+}
+
+.confirm .row {
+  margin-bottom: 24px;
+}
+
+.ant-row, .ant-row:after, .ant-row:before {
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.confirm .label {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.ant-col-md-6 {
+  display: block;
+  -ms-flex: 0 0 25%;
+  flex: 0 0 25%;
+  max-width: 25%;
+}
+
+.ant-col {
+  position: relative;
+  max-width: 100%;
+  min-height: 1px;
+}
+
+.ant-col-md-18 {
+  display: block;
+  -ms-flex: 0 0 75%;
+  flex: 0 0 75%;
+  max-width: 75%;
+}
+
+.confirm .to-address {
+  border-radius: 10px;
+  transition: 0s;
+  width: 100%;
+}
+
+.input__numberic {
+  display: flex;
+  background-color: #f9f9f9;
+  padding: 5px 10px;
+  align-items: center;
+}
+
+.confirm .to-address input {
+  padding: 14px;
+  background-color: #f9f9f9;
+  border: none;
+  outline: none;
+  opacity: 1;
+  width: 100%;
+  padding-left: 15px;
+  font-size: 15px;
+  color: #969696;
+  -webkit-text-fill-color: #969696;
+}
+
+.confirm .row-estimate .field {
+  display: flex;
+  align-items: center;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.confirm .row-balance .field {
+  display: flex;
+  align-items: center;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.confirm .row-priority .ant-radio-group {
+  display: flex;
+  justify-content: space-between;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  color: rgba(0,0,0,.85);
+  font-size: 14px;
+  font-variant: tabular-nums;
+  line-height: 1.5715;
+  list-style: none;
+  -webkit-font-feature-settings: "tnum";
+  font-feature-settings: "tnum","tnum";
+  font-size: 0;
+  line-height: unset;
+}
+
+.confirm .row-priority .ant-radio-button-wrapper {
+  width: calc(30% - 6.777px);
+  border-radius: 10px;
+  border: 1px solid hsla(0,0%,59.2%,.7);
+  text-align: center;
+  font-size: 16px;
+  height: unset;
+  padding: 9px;
+  font-weight: 700;
+  color: rgba(62,58,57,.7);
+}
+
+.ant-radio-button-wrapper {
+  position: relative;
+  display: inline-block;
+  height: 32px;
+  margin: 0;
+  padding: 0 15px;
+  color: rgba(0,0,0,.85);
+  font-size: 14px;
+  line-height: 30px;
+  background: #fff;
+  border-color: #d9d9d9;
+  border-style: solid;
+  border-width: 1.02px 1px 1px 0;
+  cursor: pointer;
+}
+
+.ant-radio-button-wrapper>.ant-radio-button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+}
+
+.confirm .row-priority .ant-radio-group-solid .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+  background-color: #EA5455;
+  background-image: linear-gradient( 90deg, #FEB692 10%, #EA5455 100%);
+  color: #fff;
+}
+
+.confirm .row-action {
+  margin-top: 40px;
+}
+
+.confirm .row-action .field .button-submit {
+  flex: 1 1 80%;
+  margin-right: 20px;
+  border: none;
+}

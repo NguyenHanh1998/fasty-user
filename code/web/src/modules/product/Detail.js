@@ -4,6 +4,8 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Redirect, withRouter } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
+import numeral from 'numeral'
+import { BigNumber } from 'bignumber.js'
 
 // UI Imports
 import { Grid, GridCell } from '../../ui/grid'
@@ -20,6 +22,8 @@ import { renderIf } from '../../setup/helpers'
 import { get } from './api/actions'
 import Loading from '../common/Loading'
 import Related from './Related'
+import { messageShow, messageHide } from '../common/api/actions'
+import orderRoutes from '../../setup/routes/order'
 
 // Component
 class Detail extends PureComponent {
@@ -31,6 +35,7 @@ class Detail extends PureComponent {
 
   // Runs on client only
   componentDidMount() {
+    console.log('-----------', this.props.product.item, this.props.wallet)
     this.refresh(this.props.match.params.slug)
   }
 
@@ -42,6 +47,54 @@ class Detail extends PureComponent {
 
   refresh = (slug) => {
     this.props.get(slug)
+  }
+
+  validateWalletAmount() {
+    if (!this.props.wallet.details || !this.props.wallet.details.ethAddress) {
+      this.props.messageShow('Not wallet was imported!')
+
+      window.setTimeout(() => {
+        this.props.messageHide()
+      }, 5000)
+    } else {
+      // check balance
+      console.log('*****', this.props.wallet.details.balance)
+      const walletBalance = new BigNumber(this.props.wallet.details.balance)
+      const offerPrice = numeral(new BigNumber(this.props.product.item.price)
+      .dividedBy(Math.pow(10, 18)).toNumber())
+      .format('0,0.[00000000]');
+
+      console.log('...', walletBalance, offerPrice)
+      if (walletBalance.lt(offerPrice)) {
+        this.props.messageShow("Insufficient wallet\'s balance to buy this product!")
+
+        window.setTimeout(() => {
+          this.props.messageHide()
+        }, 5000)
+      } else if(walletBalance.eq(offerPrice)) {
+        this.props.messageShow("Insufficient wallet\\'s balance to pay network fee!")
+
+        window.setTimeout(() => {
+          this.props.messageHide()
+        }, 5000)
+      }
+
+      //
+    }
+  }
+
+  takeOrderByEth() {
+    this.validateWalletAmount()
+    console.log('/////', this.props.product.item.orderId)
+
+    //if success -> direct to confirm payment page
+    this.props.history.push({
+      pathname: orderRoutes.confirmPayment.path,
+      state: { 
+        offerPrice: this.props.product.item.price,
+        orderId: this.props.product.item.orderId
+      }
+    })
   }
 
   render() {
@@ -90,7 +143,22 @@ class Detail extends PureComponent {
                           Launched on { new Date(parseInt(item.createdAt)).toDateString() }
                         </p>
 
-                        <Button theme="primary" style={{ marginTop: '10em' }}>Buy Now <Icon size={1.2} style={{ color: white }}>navigate_next</Icon></Button>
+                        <div style={{
+                          width: '350px',
+                          marginTop: '3.5em',
+                          marginLeft: 'auto',
+                          marginRight: 'auto',
+                          textAlign: 'left',
+                          fontSize: '14px'
+                        }}>
+                          <H4 style={{ marginTop: '1em' }}>Currency : {(item.currency).toUpperCase()}</H4>
+                          <H4 style={{ marginTop: '1em' }}>Offer Price : {
+                            numeral( new BigNumber(item.price).
+                            dividedBy(Math.pow(10, 18)).toNumber()).
+                            format('0,0.[00000000]')} ETH</H4>
+                        </div>
+
+                        <Button theme="secondary" style={{ marginTop: '3em' }} onClick={this.takeOrderByEth.bind(this)} >Buy Now <Icon size={1.2} style={{ color: white }}>navigate_next</Icon></Button>
                       </GridCell>
                     </Grid>
 
@@ -114,15 +182,21 @@ class Detail extends PureComponent {
 
 // Component Properties
 Detail.propTypes = {
+  wallet: PropTypes.object.isRequired,
   product: PropTypes.object.isRequired,
-  get: PropTypes.func.isRequired
+  user: PropTypes.object.isRequired,
+  get: PropTypes.func.isRequired,
+  messageShow: PropTypes.func.isRequired,
+  messageHide: PropTypes.func.isRequired
 }
 
 // Component State
 function detailState(state) {
   return {
-    product: state.product
+    product: state.product,
+    wallet: state.wallet,
+    user: state.user
   }
 }
 
-export default withRouter(connect(detailState, { get })(Detail))
+export default withRouter(connect(detailState, { get, messageHide, messageShow })(Detail))
