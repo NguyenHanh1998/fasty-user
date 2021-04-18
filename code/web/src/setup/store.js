@@ -10,6 +10,7 @@ import * as product from '../modules/product/api/state'
 import * as subscription from '../modules/subscription/api/state'
 import * as crate from '../modules/crate/api/state'
 import * as wallet from '../modules/wallets/api/state'
+import * as order from '../modules/orders/api/state'
 
 // App Reducer
 const appReducer = combineReducers({
@@ -18,7 +19,8 @@ const appReducer = combineReducers({
   ...product,
   ...subscription,
   ...crate,
-  ...wallet
+  ...wallet,
+  ...order
 })
 
 // Root Reducer

@@ -6,9 +6,10 @@ import user from './user'
 import product from './product'
 import crate from './crate'
 import wallet from './wallet'
+import order from './order'
 
 // Combined routes
-export const routes = Object.assign(admin, home, user, product, crate, wallet)
+export const routes = Object.assign(admin, home, user, product, crate, wallet, order)
 
 // API Routes
 export const routeApi = APP_URL_API
