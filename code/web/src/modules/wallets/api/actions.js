@@ -109,10 +109,23 @@ export function getOneAddress() {
       }
     })
     .catch(error => {
-      dispatch({
-        type: IMPORT_WALLET_RESPONSE,
-        error: `${error}.Please try again!`,
-      })
+      console.log('? error', error.response)
+      if(error.response.data.meta.code === 404 &&
+        error.response.data.meta.message === 'Address not found') {
+          dispatch({
+            type: SET_WALLET,
+            wallet: null
+          })
+          dispatch({
+            type: IMPORT_WALLET_RESPONSE,
+            error: 'Import your wallet now',
+          })
+        } else {
+          dispatch({
+            type: IMPORT_WALLET_RESPONSE,
+            error: `${error}.Please try again!`,
+          })
+        }
     }) 
   }
 }

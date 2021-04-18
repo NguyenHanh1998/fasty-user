@@ -25,8 +25,10 @@ class MyWalletsList extends PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.wallet.details.ethAddress !== this.props.wallet.details.ethAddress) {
-      this.refresh(nextProps.wallet.details.ethAddress)
+    if(nextProps.wallet.details){
+      if(nextProps.wallet.details.ethAddress !== this.props.wallet.details.ethAddress) {
+        this.refresh(nextProps.wallet.details.ethAddress)
+      }
     }
   }
 
