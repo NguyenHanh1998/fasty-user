@@ -69,6 +69,12 @@ export class ProductDetails {
   image: string;
 
   @ApiProperty({
+    type: String,
+    example: '129460535469386645582397207124226106214',
+  })
+  orderId: string;
+
+  @ApiProperty({
     type: Number,
     example: 1587464883336,
   })
@@ -80,7 +86,7 @@ export class ProductDetails {
   })
   updatedAt: number;
 
-  constructor(product: Product) {
+  constructor(product: any) {
     (this.id = product.id),
       (this.name = product.name),
       (this.slug = product.slug),
@@ -92,6 +98,7 @@ export class ProductDetails {
       (this.currency = product.currency),
       (this.currentOwner = product.currentOwner),
       (this.image = product.image),
+      (this.orderId = product.orderId),
       (this.createdAt = product.createdAt),
       (this.updatedAt = product.updatedAt);
   }

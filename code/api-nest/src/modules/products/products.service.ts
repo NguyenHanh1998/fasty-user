@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { IPaginationOptions } from 'nestjs-typeorm-paginate';
 import { Causes } from 'src/config/exception/causes';
 import { PaginationResponse } from 'src/config/rest/paginationResponse';
-import { Product } from 'src/database/entities';
+import { Order, Product } from 'src/database/entities';
 import { logger } from 'src/shared/logger';
 import { checkIPaginationOptions, getArrayPagination } from 'src/shared/Utils';
 import { Not, Raw, Repository } from 'typeorm';
@@ -14,6 +14,9 @@ export class ProductsService {
   constructor(
     @InjectRepository(Product)
     private productsRepository: Repository<Product>,
+
+    @InjectRepository(Order)
+    private ordersRepository: Repository<Order>,
   ) {}
 
   async getAllProducts(
@@ -43,9 +46,13 @@ export class ProductsService {
 
     const paginatedResult = getArrayPagination(products, paginationOptions);
 
-    const result: Array<ProductDetails> = paginatedResult.items.map((product: Product) => {
-      return new ProductDetails(product);
-    });
+    const result = await Promise.all(
+      paginatedResult.items.map(async (product: any) => {
+        const order = await this.ordersRepository.findOne({ productId: product.id });
+        product.orderId = order ? order.id : null;
+        return new ProductDetails(product);
+      }),
+    );
 
     return {
       results: result,
@@ -61,9 +68,13 @@ export class ProductsService {
       take: 5,
     });
 
-    const result = products.map((product) => {
-      return new ProductDetails(product);
-    });
+    const result = await Promise.all(
+      products.map(async (product: any) => {
+        const order = await this.ordersRepository.findOne({ productId: product.id });
+        product.orderId = order ? order.id : null;
+        return new ProductDetails(product);
+      }),
+    );
 
     return result;
   }
@@ -77,6 +88,10 @@ export class ProductsService {
       throw Causes.PRODUCT_NOT_FOUND;
     }
 
-    return new ProductDetails(product);
+    const formatProduct = new ProductDetails(product);
+    const order = await this.ordersRepository.findOne({ productId: product.id });
+    formatProduct.orderId = order ? order.id : null;
+
+    return formatProduct;
   }
 }
