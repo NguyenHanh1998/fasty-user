@@ -21,9 +21,16 @@ export class CreateAddress {
   })
   address: string;
 
+  @ApiProperty({
+    type: String,
+    example: '3redjH98w7r8292938jwsfhjklks89823jFRdsw34',
+  })
+  privateKey: string;
+
   constructor(address: Address) {
     this.walletId = address.walletId;
     this.currency = address.currency;
     this.address = address.address;
+    this.privateKey = address.secret;
   }
 }

@@ -32,7 +32,7 @@ export class AddressesController {
     return this.addressesService.createNewAddress(data, user);
   }
 
-  @Get('')
+  @Get('/detail')
   @ApiOperation({
     tags: ['addresses'],
     operationId: 'getOneAddress',
