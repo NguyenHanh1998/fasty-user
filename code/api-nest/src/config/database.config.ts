@@ -21,6 +21,10 @@ import {
   EventLog,
   EnvConfig,
   Address,
+  LocalTx,
+  EventTakeOrder,
+  EventPlaceOrder,
+  HotWallet,
 } from 'src/database/entities';
 import { ConnectionOptions } from 'typeorm';
 
@@ -54,6 +58,10 @@ export const databaseConfig: ConnectionOptions = {
     EventLog,
     EnvConfig,
     Address,
+    LocalTx,
+    EventTakeOrder,
+    EventPlaceOrder,
+    HotWallet,
   ],
   synchronize: true,
 };

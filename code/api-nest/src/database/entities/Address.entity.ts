@@ -26,6 +26,9 @@ export class Address {
   @Column('text', { name: 'secret', nullable: false })
   public secret: string;
 
+  @Column({ name: 'is_operator', type: 'tinyint', width: 1, nullable: false, default: 0 })
+  public isOperator: boolean;
+
   @Column({ name: 'created_at', type: 'bigint', nullable: true })
   public createdAt: number;
 

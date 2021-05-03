@@ -44,7 +44,10 @@ export class AddressesService {
       throw Causes.WALLET_WITH_USER_ID_NOT_EXISTED;
     }
 
-    const address = await this.addressesRepository.findOne({ walletId: wallet.id });
+    const address = await this.addressesRepository.findOne({
+      walletId: wallet.id,
+      isOperator: false,
+    });
     if (!address) {
       throw Causes.ADDRESS_NOT_FOUND;
     }

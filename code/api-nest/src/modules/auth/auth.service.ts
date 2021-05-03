@@ -62,7 +62,10 @@ export class AuthService {
 
     let address: string = null;
     // get address
-    const addressRecord = await this.addressesRepository.findOne({ walletId: wallet.id });
+    const addressRecord = await this.addressesRepository.findOne({
+      walletId: wallet.id,
+      isOperator: false,
+    });
     if (addressRecord) {
       address = addressRecord.address;
     }

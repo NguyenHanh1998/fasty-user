@@ -20,3 +20,7 @@ export * from './WithdrawalLog.entity';
 export * from './WithdrawalTx.entity';
 export * from './EnvConfig.entity';
 export * from './Address.entity';
+export * from './LocalTx.entity';
+export * from './EventPlaceOrder.entity';
+export * from './EventTakeOrder.entity';
+export * from './HotWallet.entity';
