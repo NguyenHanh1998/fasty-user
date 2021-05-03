@@ -5,5 +5,6 @@ export const SmartContractMethod = {
   CANCEL_ORDER: 'cancelOrder',
   HAS_EXISTENT_TOKEN: 'hasExistentToken',
   HAS_EXISTENT_ORDER: 'hasExistentOrder',
-  TAKE_ORDER_BY_ETHER: 'takeOrderByEther'
+  TAKE_ORDER_BY_ETHER: 'takeOrderByEther',
+  GET_ORDER_DETAILS: 'getOrderDetails'
 }

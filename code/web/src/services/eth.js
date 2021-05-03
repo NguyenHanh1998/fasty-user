@@ -1,5 +1,5 @@
 
-import { isValidPrivate } from 'ethereumjs-util'
+import { isValidPrivate, isValidAddress } from 'ethereumjs-util'
 import * as ethers from 'ethers'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -12,6 +12,10 @@ import { SmartContractMethod } from '../constants'
 const ERC721Gateway = new GatewaySC();
 export class EthService {
   constructor(){}
+
+  isValidAddress(address) {
+    return isValidAddress(address);
+  }
 
   isValidPrivateKey(userPrivateKey) {
     const privateKey = userPrivateKey.startsWith('0x')
@@ -32,7 +36,7 @@ export class EthService {
 
     const wallet = new ethers.Wallet(privateKey);
     return {
-      privateKeyEth: userPrivateKey,
+      privateKey: userPrivateKey,
       ethAddress: wallet.address,
     }
   }
@@ -84,8 +88,49 @@ export class EthService {
     if(!orderId) {
       orderId = this.generateOrderId(5);
     }
-    console.log('...orderId', orderId, typeof(amount))
     return await ERC721Gateway.getEstimateTransactionFee(fromAddress, method, [orderId], amount)
+  }
+
+  async takeOrderByEther({
+    privateKey,
+    orderId,
+    amount,
+    priority
+  }) {
+    const wallet = this.importWalletByPrivateKey(privateKey);
+    const params = [orderId];
+    const orderDetails = await ERC721Gateway.readContract(SmartContractMethod.GET_ORDER_DETAILS, [orderId]);
+    
+    switch (parseInt(orderDetails.status)) {
+      case 0: 
+        const unsignedTx = await ERC721Gateway.constructRawTx(
+          wallet.ethAddress, 
+          SmartContractMethod.TAKE_ORDER_BY_ETHER,
+          params,
+          {
+            value: amount
+          },
+          priority
+        );
+        // return;
+
+        const signedTx = await ERC721Gateway.signRawTx(
+          unsignedTx.unsignedRaw, 
+          wallet.privateKey
+        );
+        const result = await ERC721Gateway.sendRawTx(signedTx.signedRaw, 5);
+        return {
+          txid: result.txid,
+          status: orderDetails.status,
+          rawTx: signedTx.signedRaw
+        }
+        
+      case 1:
+      case 2:
+      case 3:
+      default:
+        return { status: orderDetails.status };
+    }
   }
 }
 

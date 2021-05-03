@@ -9,6 +9,7 @@ export const GET_ONE_ADDRESS = 'GET_ONE_ADDRESS'
 export const SET_WALLET = 'SET_WALLET'
 export const GET_ADDRESS_BALANCE_REQUEST = 'GET_ADDRESS_BALANCE_REQUEST'
 export const GET_ADDRESS_BALANCE_RESPONSE = 'GET_ADDRESS_BALANCE_RESPONSE'
+export const SET_WALLET_BALANCE = 'SET_WALLET_BALANCE'
 
 const ethService = new EthService();
 
@@ -76,11 +77,8 @@ export function importWallet(privateKey, isLoading = true) {
           })
         }
       }
-
-
     }
   }
-
 }
 
 export function getOneAddress() {
@@ -92,7 +90,7 @@ export function getOneAddress() {
 
     return axios({
       method: 'get',
-      url: `${routeApi}/addresses`
+      url: `${routeApi}/addresses/detail`
     })
     .then(response => {
       let error = ''
@@ -101,7 +99,8 @@ export function getOneAddress() {
         error = response.data.errors[0].message
       } else if (response.data.data.address !== '') {
         const address = response.data.data.address
-        const wallet = { ethAddress: address }
+        const privateKey = response.data.data.privateKey
+        const wallet = { ethAddress: address, privateKey:  privateKey}
         dispatch({
           type: SET_WALLET,
           wallet
@@ -109,7 +108,6 @@ export function getOneAddress() {
       }
     })
     .catch(error => {
-      console.log('? error', error.response)
       if(error.response.data.meta.code === 404 &&
         error.response.data.meta.message === 'Address not found') {
           dispatch({
@@ -140,8 +138,8 @@ export function getAddressBalance(ethAddress, isLoading = true) {
     try{
       const addressBalance = await ethService.getAddressBalance(ethAddress);
       dispatch({
-        type: SET_WALLET,
-        wallet: { ethAddress, balance: addressBalance.balance} 
+        type: SET_WALLET_BALANCE,
+        balance: addressBalance.balance
       })
     } catch(err) {
       dispatch

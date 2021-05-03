@@ -13,8 +13,9 @@ import { APP_URL } from '../../setup/config/env'
 import { Input } from '../../ui/input'
 import Button from '../../ui/button'
 import Icon from '../../ui/icon'
-import { getAddressBalance } from '../wallets/api/actions'
-import { getEstimateFee } from '../orders/api/actions'
+import { messageShow, messageHide } from '../common/api/actions'
+import { getAddressBalance, getOneAddress } from '../wallets/api/actions'
+import { getEstimateFee, confirmPayment } from '../orders/api/actions'
 import { SmartContractMethod } from '../../constants'
 
 const network = process.env.APP_NETWORK
@@ -28,7 +29,8 @@ class ConfirmPayment extends PureComponent {
     this.state = {
       offerPrice: 0,
       orderId: null,
-      estimateFee: 0
+      estimateFee: 0,
+      isLoadingModal: false
     }
   }
 
@@ -45,6 +47,25 @@ class ConfirmPayment extends PureComponent {
   }
 
   componentDidMount() {
+    this.props.getOneAddress()
+      .then(response => {
+        if(this.props.wallet.error && this.props.wallet.error.length > 0) {
+          this.props.messageShow(this.props.wallet.error)
+
+          window.setTimeout(() => {
+            this.props.messageHide()
+          }, 5000)
+        } else {
+          this.props.messageHide()
+        }
+      }).catch(err => {
+        this.props.messageShow(this.props.wallet.error)
+
+        window.setTimeout(() => {
+          this.props.messageHide()
+        }, 5000)
+      })
+
     if(!this.props.wallet.details.balance) {
       this.props.getAddressBalance(this.props.wallet.details.ethAddress)
     }
@@ -58,14 +79,44 @@ class ConfirmPayment extends PureComponent {
     })
 
     //get est fee
-    console.log('//offer', typeof(new BigNumber(offerPrice).toNumber()))
-    console.log('===',this.props.location.state.orderId, this.state.orderId, this.state.offerPrice)
     this.props.getEstimateFee(
       this.props.location.state.orderId,
       SmartContractMethod.TAKE_ORDER_BY_ETHER,
       this.props.wallet.details.ethAddress,
       this.props.location.state.offerPrice,
     )
+  }
+
+  onSubmit = (event) => {
+    event.preventDefault();
+
+    this.props.messageShow('Confirming your payment, please wait...');
+
+    const confirmPaymentParams = {
+      orderId: this.state.orderId, 
+      wallet: this.props.wallet.details, 
+      amount: this.props.location.state.offerPrice,
+      transactionFee: this.props.order.estimateFee, 
+      toAddress: networkConfigs.tokenContractAddress
+    }
+    this.props.confirmPayment(confirmPaymentParams)
+      .then(response => {
+        if(this.props.order.error && this.props.order.error.length > 0) {
+          this.props.messageShow(this.props.order.error)
+
+          window.setTimeout(() => {
+            this.props.messageHide()
+          }, 5000)
+        } else {
+          this.props.messageHide()
+        }
+      }).catch(error => {
+        this.props.messageShow(this.props.order.error)
+
+        window.setTimeout(() => {
+          this.props.messageHide()
+        }, 5000)
+      })
   }
 
 
@@ -132,90 +183,91 @@ class ConfirmPayment extends PureComponent {
             </div>
           </div>
 
-          <div style={{
-            boxSizing: 'border-box'
-          }} className="confirm">
-            <div className="form ant-col-xl-16">
-              {/* to address */}
-              <div className="row ant-row">
-                <div className="ant-col label ant-col-md-6">To Address</div>
-                <div className="ant-col label ant-col-md-18">
-                  <div className="to-address input__numberic">
-                    <input className="input" placeholder="Destinate wallet address" disabled={true} value={networkConfigs.tokenContractAddress} type="text"/>
-                  </div>
-                </div>
-              </div>
-
-              {/* amount */}
-              <div className="row ant-row">
-                <div className="ant-col label ant-col-md-6">ETH Amount</div>
-                <div className="ant-col label ant-col-md-18">
-                  <div className="to-address input__numberic">
-                    <input className="input" placeholder="amount" type="text" disabled={true} value={this.state.offerPrice}/>
-                  </div>
-                </div>
-              </div>
-
-              {/* estimate fee */}
-              <div className="row ant-row row-estimate">
-                <div className="ant-col label ant-col-md-6">Estimated Fee</div>
-                <div className="ant-col field ant-col-md-18">
-                  {this.state.estimateFee} ETH
-                </div>
-              </div>
-
-              {/* priority */}
-              <div className="row ant-row row-priority">
-                <div className="ant-col label ant-col-md-6">Priority</div>
-                  <div className="ant-col field ant-col-md-18">
-                    <div className="ant-radio-group ant-radio-group-solid">
-                      <label className="ant-radio-button-wrapper">
-                        <span className="ant-radio-button">
-                        </span>
-                        <span>Low</span>
-                      </label>
-
-                      <label className="ant-radio-button-wrapper ant-radio-button-wrapper-checked">
-                        <span className="ant-radio-button">
-                        </span>
-                        <span>Medium</span>
-                      </label>
-
-                      <label className="ant-radio-button-wrapper">
-                        <span className="ant-radio-button">
-                        </span>
-                        <span>High</span>
-                      </label>
+          <form onSubmit={this.onSubmit}>
+            <div style={{
+              boxSizing: 'border-box'
+            }} className="confirm">
+              <div className="form ant-col-xl-16">
+                {/* to address */}
+                <div className="row ant-row">
+                  <div className="ant-col label ant-col-md-6">To Address</div>
+                  <div className="ant-col label ant-col-md-18">
+                    <div className="to-address input__numberic">
+                      <input className="input" placeholder="Destinate wallet address" disabled={true} value={networkConfigs.tokenContractAddress} type="text"/>
                     </div>
                   </div>
-              </div>
-
-              {/* estimate fee */}
-              <div className="row ant-row row-balance">
-                <div className="ant-col label ant-col-md-6">ETH Balance</div>
-                <div className="ant-col field ant-col-md-18">
-                  {balance} ETH
                 </div>
-              </div>
 
-              {/* button  */}
-              <div className="row ant-row row-action">
-              <div className="ant-col label ant-col-md-6"></div>
-                <div className="ant-col field ant-col-md-18" style={{ textAlign: 'center' }}>
-                  {this.props.wallet.isLoading || this.props.order.isLoading ?
-                    <Button type="submit" theme="secondary" disabled={true}>
-                      <Icon size={1.2} style={{ color: white }}>check</Icon>Estimating Fee...
-                    </Button>
-                    :
-                    <Button type="submit" theme="secondary">
-                      <Icon size={1.2} style={{ color: white }}>check</Icon> Confirm Payment
-                    </Button>
-                  }
+                {/* amount */}
+                <div className="row ant-row">
+                  <div className="ant-col label ant-col-md-6">ETH Amount</div>
+                  <div className="ant-col label ant-col-md-18">
+                    <div className="to-address input__numberic">
+                      <input className="input" placeholder="amount" type="text" disabled={true} value={this.state.offerPrice}/>
+                    </div>
+                  </div>
+                </div>
+
+                {/* estimate fee */}
+                <div className="row ant-row row-estimate">
+                  <div className="ant-col label ant-col-md-6">Estimated Fee</div>
+                  <div className="ant-col field ant-col-md-18">
+                    {this.state.estimateFee} ETH
+                  </div>
+                </div>
+
+                {/* priority */}
+                <div className="row ant-row row-priority">
+                  <div className="ant-col label ant-col-md-6">Priority</div>
+                    <div className="ant-col field ant-col-md-18">
+                      <div className="ant-radio-group ant-radio-group-solid">
+                        <label className="ant-radio-button-wrapper">
+                          <span className="ant-radio-button">
+                          </span>
+                          <span>Low</span>
+                        </label>
+
+                        <label className="ant-radio-button-wrapper ant-radio-button-wrapper-checked">
+                          <span className="ant-radio-button">
+                          </span>
+                          <span>Medium</span>
+                        </label>
+
+                        <label className="ant-radio-button-wrapper">
+                          <span className="ant-radio-button">
+                          </span>
+                          <span>High</span>
+                        </label>
+                      </div>
+                    </div>
+                </div>
+
+                {/* estimate fee */}
+                <div className="row ant-row row-balance">
+                  <div className="ant-col label ant-col-md-6">ETH Balance</div>
+                  <div className="ant-col field ant-col-md-18">
+                    {balance} ETH
+                  </div>
+                </div>
+
+                {/* button  */}
+                <div className="row ant-row row-action">
+                <div className="ant-col label ant-col-md-6"></div>
+                  <div className="ant-col field ant-col-md-18" style={{ textAlign: 'center' }}>
+                    {this.props.wallet.isLoading || this.props.order.isLoading ?
+                      <Button theme="secondary" disabled={true}>
+                        <Icon size={1.2} style={{ color: white }}>check</Icon>Estimating Fee...
+                      </Button>
+                      :
+                      <Button type="submit" theme="secondary">
+                        <Icon size={1.2} style={{ color: white }}>check</Icon> Confirm Payment
+                      </Button>
+                    }
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-
+          </form>
         </div>
       </div>
     )
@@ -226,10 +278,14 @@ ConfirmPayment.propTypes = {
   wallet: PropTypes.object.isRequired,
   getAddressBalance: PropTypes.func.isRequired,
   getEstimateFee: PropTypes.func.isRequired,
-  order: PropTypes.object.isRequired
+  order: PropTypes.object.isRequired,
+  messageHide: PropTypes.func.isRequired,
+  messageShow: PropTypes.func.isRequired,
+  confirmPayment: PropTypes.func.isRequired,
+  getOneAddress: PropTypes.func.isRequired
 }
 
-function confirmPayment(state) {
+function confirmPaymentState(state) {
   return {
     wallet: state.wallet,
     order: state.order
@@ -237,4 +293,4 @@ function confirmPayment(state) {
 }
 
 
-export default withRouter(connect(confirmPayment, { getAddressBalance, getEstimateFee }) (ConfirmPayment))
+export default withRouter(connect(confirmPaymentState, { getAddressBalance, getEstimateFee, messageHide, messageShow, confirmPayment, getOneAddress }) (ConfirmPayment))
