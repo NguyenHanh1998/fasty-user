@@ -15,6 +15,9 @@ import { OrdersModule } from './modules/orders/orders.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AddressesModule } from './modules/addresses/addresses.module';
+import { TransactionsService } from './modules/transactions/transactions.service';
+import { TransactionsController } from './modules/transactions/transactions.controller';
+import { TransactionsModule } from './modules/transactions/transactions.module';
 
 @Module({
   imports: [
@@ -29,8 +32,9 @@ import { AddressesModule } from './modules/addresses/addresses.module';
     ProductsModule,
     OrdersModule,
     AddressesModule,
+    TransactionsModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, TransactionsController],
   providers: [
     AppService,
     {
@@ -41,6 +45,7 @@ import { AddressesModule } from './modules/addresses/addresses.module';
       provide: APP_FILTER,
       useClass: ExceptionFilter,
     },
+    TransactionsService,
   ],
 })
 export class AppModule {}

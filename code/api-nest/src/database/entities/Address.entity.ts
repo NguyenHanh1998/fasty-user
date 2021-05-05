@@ -4,9 +4,13 @@ import { nowInMillis } from '../../shared/Utils';
 
 @Entity('address')
 @Index('wallet_id', ['walletId'], { unique: false })
+@Index('user_id', ['userId'], { unique: false })
 export class Address {
   @Column({ name: 'wallet_id', type: 'int', nullable: false })
   public walletId: number;
+
+  @Column({ name: 'user_id', type: 'int', nullable: false })
+  public userId: number;
 
   @Column({ name: 'currency', type: 'varchar', length: 200, nullable: false })
   public currency: string;

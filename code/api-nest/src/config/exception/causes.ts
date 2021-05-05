@@ -61,6 +61,10 @@ export class Causes {
     'Memo is required for the address',
     HttpStatus.BAD_REQUEST,
   );
+  public static ADDRESS_OF_USER_NOT_FOUND = new HttpException(
+    'Address of user not found',
+    HttpStatus.INTERNAL_SERVER_ERROR,
+  );
 
   /**
    * wallet
