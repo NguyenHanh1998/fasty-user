@@ -15,6 +15,7 @@ import Loading from '../common/Loading'
 import EmptyMessage from '../common/EmptyMessage'
 import { getOneAddress, getAddressBalance } from './api/actions'
 import { messageShow, messageHide } from '../common/api/actions'
+import WalletMenu from './common/Menu'
 
 class MyWalletsList extends PureComponent {
 
@@ -66,15 +67,17 @@ class MyWalletsList extends PureComponent {
       <div>
         {/* SEO */}
         <Helmet>
-          <title>My Wallets List</title>
+          <title>My Wallet</title>
         </Helmet>
+
+        <WalletMenu />
 
         {/* Top title bar */}
         <Grid style={{ backgroundColor: grey }}>
           <GridCell style={{ padding: '2em', textAlign: 'center' }}>
-            <H3 font="secondary">My Wallets</H3>
+            <H3 font="secondary">My Wallet</H3>
 
-            <p style={{ marginTop: '1em', color: grey2 }}>The wallets you imported to be listed here. You can import a new wallet.</p>
+            <p style={{ marginTop: '1em', color: grey2 }}>The wallet you imported to be listed here. You can import a new wallet.</p>
           </GridCell>
         </Grid>
 
@@ -101,7 +104,10 @@ class MyWalletsList extends PureComponent {
 
             {
               this.props.user.isAuthenticated
-                ? <Link to={walletRoutes.importWallet.path}>
+                ? details ?
+                  <p style={{ marginBottom: '1em', color: grey2 }}>You only can import one wallet for now!</p>
+                  :
+                  <Link to={walletRoutes.importWallet.path}>
                     <Button theme="primary">
                       Import Wallet <Icon size={1.2} style={{ color: white }}>navigate_next</Icon>
                     </Button>

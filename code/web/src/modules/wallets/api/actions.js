@@ -9,7 +9,10 @@ export const GET_ONE_ADDRESS = 'GET_ONE_ADDRESS'
 export const SET_WALLET = 'SET_WALLET'
 export const GET_ADDRESS_BALANCE_REQUEST = 'GET_ADDRESS_BALANCE_REQUEST'
 export const GET_ADDRESS_BALANCE_RESPONSE = 'GET_ADDRESS_BALANCE_RESPONSE'
-export const SET_WALLET_BALANCE = 'SET_WALLET_BALANCE'
+export const SET_WALLET_BALANCE = 'SET_WALLET_BALANCE';
+export const GET_LIST_TRANSACTIONS_HISTORY_REQUEST = 'GET_LIST_TRANSACTIONS_HISTORY_REQUEST';
+export const GET_LIST_TRANSACTIONS_HISTORY_RESPONSE = 'GET_LIST_TRANSACTIONS_HISTORY_RESPONSE';
+export const GET_LIST_TRANSACTIONS_HISTORY_FAILURE = 'GET_LIST_TRANSACTIONS_HISTORY_FAILURE';
 
 const ethService = new EthService();
 
@@ -144,5 +147,40 @@ export function getAddressBalance(ethAddress, isLoading = true) {
     } catch(err) {
       dispatch
     }
+  }
+}
+
+export function getListTransactions(isLoading = true) {
+  return dispatch => {
+    dispatch({
+      type: GET_LIST_TRANSACTIONS_HISTORY_REQUEST,
+      error: null,
+      isLoading
+    })
+
+    return axios.get(`${routeApi}/transactions/user`)
+      .then(response => {
+        if (response.status === 200) {
+          dispatch({
+            type: GET_LIST_TRANSACTIONS_HISTORY_RESPONSE,
+            error: null,
+            isLoading: false,
+            transactionsList: response.data.data
+          })
+        } else {
+          dispatch({
+            type: GET_LIST_TRANSACTIONS_HISTORY_FAILURE,
+            error: response.data.meta.message,
+            isLoading: false
+          })
+        }
+      })
+      .catch(error => {
+        dispatch({
+          type: GET_LIST_TRANSACTIONS_HISTORY_FAILURE,
+          error: error.response.data.meta.message + '. Please try again!',
+          isLoading: false
+        })
+      })
   }
 }
