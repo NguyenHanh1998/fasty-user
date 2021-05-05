@@ -5,8 +5,10 @@ import { checkIPaginationOptions } from 'src/shared/Utils';
 import { TransactionHistory } from './response/transactionHistory.dto';
 import { Causes as InternalException } from '../../config/exception/causes';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Address, Order, Product, User } from 'src/database/entities';
+import { Address, Order, OrderTx, Product, User } from 'src/database/entities';
 import { Repository } from 'typeorm';
+import { TransactionDetails } from './response/transactionDetails.dto';
+import { OrderTxStatus, OrderTxType } from 'src/shared/enums';
 
 @Injectable()
 export class TransactionsService {
@@ -16,6 +18,12 @@ export class TransactionsService {
 
     @InjectRepository(Address)
     private readonly addressesRepository: Repository<Address>,
+
+    @InjectRepository(Product)
+    private readonly productsRepository: Repository<Product>,
+
+    @InjectRepository(OrderTx)
+    private readonly orderTxsRepository: Repository<OrderTx>,
   ) {}
 
   async getUserTransactionHistory(
@@ -60,5 +68,30 @@ export class TransactionsService {
       results,
       pagination: response.meta,
     };
+  }
+
+  async getTransactionDetails(orderId: string): Promise<TransactionDetails> {
+    const order = await this.ordersRepository.findOne({ id: orderId });
+
+    if (!order) {
+      throw InternalException.ORDER_NOT_FOUND;
+    }
+    const transaction: any = order;
+    const product = await this.productsRepository.findOne({ id: order.productId });
+
+    transaction.productName = product.name;
+    transaction.orderId = order.id;
+    transaction.price = order.amount;
+    transaction.currency = order.currency;
+
+    const orderTx = await this.orderTxsRepository.findOne({
+      orderId: order.id,
+      type: OrderTxType.OrderFulfilled,
+      status: OrderTxStatus.CONFIRMED,
+    });
+
+    transaction.txId = orderTx ? orderTx.txid : null;
+
+    return new TransactionDetails(transaction);
   }
 }

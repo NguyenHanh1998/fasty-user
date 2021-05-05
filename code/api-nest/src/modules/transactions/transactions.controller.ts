@@ -1,9 +1,11 @@
-import { Controller, Get, HttpStatus, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { PaginationResponse } from 'src/config/rest/paginationResponse';
 import { User } from 'src/database/entities';
 import { UserDecorator } from 'src/shared/decorator/user.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { TransactionDetails } from './response/transactionDetails.dto';
+import { TransactionDetailsBase } from './response/transactionDetailsBase.sto';
 import { TransactionHistory } from './response/transactionHistory.dto';
 import { TransactionHistoryBase } from './response/transactionHistoryBase.dto';
 import { TransactionsService } from './transactions.service';
@@ -41,5 +43,21 @@ export class TransactionsController {
     @UserDecorator() user: User,
   ): Promise<PaginationResponse<TransactionHistory>> {
     return this.transactionsService.getUserTransactionHistory(user, { page, limit });
+  }
+
+  @Get('/:order_id')
+  @ApiOperation({
+    tags: ['transactions'],
+    operationId: 'getTransactionDetails',
+    summary: 'Get transaction details',
+    description: 'Get transaction details',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Successful',
+    type: TransactionDetailsBase,
+  })
+  async getTransactionDetails(@Param('order_id') orderId: string): Promise<TransactionDetails> {
+    return this.transactionsService.getTransactionDetails(orderId);
   }
 }
