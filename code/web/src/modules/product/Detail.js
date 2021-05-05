@@ -35,7 +35,6 @@ class Detail extends PureComponent {
 
   // Runs on client only
   componentDidMount() {
-    console.log('-----------', this.props.product.item, this.props.wallet)
     this.refresh(this.props.match.params.slug)
   }
 
@@ -58,13 +57,11 @@ class Detail extends PureComponent {
       }, 5000)
     } else {
       // check balance
-      console.log('*****', this.props.wallet.details.balance)
       const walletBalance = new BigNumber(this.props.wallet.details.balance)
       const offerPrice = numeral(new BigNumber(this.props.product.item.price)
       .dividedBy(Math.pow(10, 18)).toNumber())
       .format('0,0.[00000000]');
 
-      console.log('...', walletBalance, offerPrice)
       if (walletBalance.lt(offerPrice)) {
         this.props.messageShow("Insufficient wallet\'s balance to buy this product!")
 
@@ -85,7 +82,6 @@ class Detail extends PureComponent {
 
   takeOrderByEth() {
     this.validateWalletAmount()
-    console.log('/////', this.props.product.item.orderId)
 
     //if success -> direct to confirm payment page
     this.props.history.push({

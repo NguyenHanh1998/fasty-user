@@ -5,7 +5,10 @@ import {
   SET_WALLET_BALANCE,
   GET_LIST_TRANSACTIONS_HISTORY_REQUEST,
   GET_LIST_TRANSACTIONS_HISTORY_RESPONSE,
-  GET_LIST_TRANSACTIONS_HISTORY_FAILURE
+  GET_LIST_TRANSACTIONS_HISTORY_FAILURE,
+  GET_TRANSACTION_DETAILS_REQUEST,
+  GET_TRANSACTION_DETAILS_RESPONSE,
+  GET_TRANSACTION_DETAILS_FAILURE
 } from './actions'
 import { isEmpty } from '../../../setup/helpers'
 
@@ -72,7 +75,6 @@ export const transactions = (state = transactionsInitialState, action) => {
       }
 
     case GET_LIST_TRANSACTIONS_HISTORY_RESPONSE:
-      console.log('...state', action.transactionsList)
       return {
         ...state,
         isLoading: false,
@@ -84,6 +86,41 @@ export const transactions = (state = transactionsInitialState, action) => {
       return {
         ...state,
         isLoading: false,
+        error: action.error
+      }
+
+    default:
+      return state
+  }
+}
+
+const transactionInitialState = {
+  error: null,
+  isTransactionLoading: false,
+  details: null
+}
+
+export const transaction = (state = transactionInitialState, action) => {
+  switch(action.type) {
+    case GET_TRANSACTION_DETAILS_REQUEST:
+      return {
+        ...state,
+        isTransactionLoading: action.isLoading,
+        error: null,
+      }
+
+    case GET_TRANSACTION_DETAILS_RESPONSE:
+      return {
+        ...state,
+        isTransactionLoading: false,
+        error: action.error,
+        details: action.transaction
+      }
+
+    case GET_TRANSACTION_DETAILS_FAILURE:
+      return {
+        ...state,
+        isTransactionLoading: false,
         error: action.error
       }
 

@@ -36,6 +36,8 @@ const index = (APP_URL, NODE_ENV, helmet = null, appHtml = '', styles = '', init
     <link href="${ APP_URL }/css/common.css" rel="stylesheet" />
 
     <link href="${ APP_URL }/css/confirmPayment.css" rel="stylesheet" />
+
+    <link href="${ APP_URL }/css/transaction.css" rel="stylesheet" />
     
     <!-- CSS - Generated -->
     ${ styles }

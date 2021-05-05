@@ -13,6 +13,9 @@ export const SET_WALLET_BALANCE = 'SET_WALLET_BALANCE';
 export const GET_LIST_TRANSACTIONS_HISTORY_REQUEST = 'GET_LIST_TRANSACTIONS_HISTORY_REQUEST';
 export const GET_LIST_TRANSACTIONS_HISTORY_RESPONSE = 'GET_LIST_TRANSACTIONS_HISTORY_RESPONSE';
 export const GET_LIST_TRANSACTIONS_HISTORY_FAILURE = 'GET_LIST_TRANSACTIONS_HISTORY_FAILURE';
+export const GET_TRANSACTION_DETAILS_REQUEST = 'GET_TRANSACTION_DETAILS_REQUEST';
+export const GET_TRANSACTION_DETAILS_RESPONSE = 'GET_TRANSACTION_DETAILS_RESPONSE';
+export const GET_TRANSACTION_DETAILS_FAILURE = 'GET_TRANSACTION_DETAILS_FAILURE';
 
 const ethService = new EthService();
 
@@ -178,6 +181,41 @@ export function getListTransactions(isLoading = true) {
       .catch(error => {
         dispatch({
           type: GET_LIST_TRANSACTIONS_HISTORY_FAILURE,
+          error: error.response.data.meta.message + '. Please try again!',
+          isLoading: false
+        })
+      })
+  }
+}
+
+export function getTransactionDetails(orderId, isLoading = true) {
+  return dispatch => {
+    dispatch({
+      type: GET_TRANSACTION_DETAILS_REQUEST,
+      error: null,
+      isLoading
+    })
+
+    return axios.get(`${routeApi}/transactions/${orderId}`)
+      .then(response => {
+        if (response.status === 200) {
+          dispatch({
+            type: GET_TRANSACTION_DETAILS_RESPONSE,
+            error: null,
+            isLoading: false,
+            transaction: response.data.data
+          })
+        } else {
+          dispatch({
+            type: GET_TRANSACTION_DETAILS_FAILURE,
+            error: response.data.meta.message,
+            isLoading: false
+          })
+        }
+      })
+      .catch(error => {
+        dispatch({
+          type: GET_TRANSACTION_DETAILS_FAILURE,
           error: error.response.data.meta.message + '. Please try again!',
           isLoading: false
         })

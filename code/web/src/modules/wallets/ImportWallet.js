@@ -71,77 +71,13 @@ export class ImportWallet extends PureComponent {
       })
   }
 
+  onModalClose = () => {
+    this.setState({ isModal: !this.state.isModal })
+  }
+
   renderModalChildren = () => {
     return (
-      <div style={{
-        width: '650px',
-        transformOrigin: '587.988px 205.012px',
-        boxSizing: 'border-box',
-        color: 'rgba(0,0,0,.85)',
-        fontSize: '14px',
-        fontVariant: 'tabular-nums',
-        lineHeight: '1.5715',
-        listStyle: 'none',
-        pointerEvents: 'none',
-        position: 'relative',
-        top: '230px',
-        maxWidth: 'calc(100vw - 32px)',
-        margin: '0 auto',
-        padding: '0 0 24px'
-      }}>
-        <div style={{
-          borderRadius: '10px',
-          overflow: 'hidden',
-          position: 'relative',
-          backgroundColor: '#fff',
-          backgroundClip: 'padding-box',
-          border: 0,
-          boxShadow: '0 3px 6px -4px rgba(0,0,0,.12), 0 6px 16px 0 rgba(0,0,0,.08), 0 9px 28px 8px rgba(0,0,0,.05)',
-          pointerEvents: 'auto',
-        }}>
-          <div style={{
-            padding: '0',
-            fontSize: '14px',
-            lineHeight: '1.5715'
-          }}>
-          <H4 style={{
-            fontWeight: 700,
-            color: '#fff',
-            backgroundColor: '#3e3a39',
-            padding: '30px',
-            textAlign: 'center',
-            position: 'relative',
-            marginBottom: '.5em',
-            fontSize: '20px',
-            lineHeight: '1.4'
-          }}>Import by Private Key
-          
-            <img 
-              onClick={() => { this.setState({isModal: false })}}
-              src={`${APP_URL}/images/wallets/cancel.png`} 
-              style={{
-                position: 'absolute',
-                right: '30px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                cursor: 'pointer',
-                display: 'inline-block',
-                color: 'inherit',
-                fontStyle: 'normal',
-                lineHeight: 0,
-                textAlign: 'center',
-                textTransform: 'none',
-                verticalAlign: '-.125em',
-                textRendering: 'optimizeLegibility'
-              }}
-            />
-          </H4>
-
-            {/** body form */}
-          <div style={{
-            padding: '20px 55px 55px',
-            textAlign: 'center'
-          }}>
+      <div>
             <H4 style={{
             fontWeight: '700',
             marginBottom: '30px',
@@ -197,10 +133,6 @@ export class ImportWallet extends PureComponent {
               </div>
             </form>
           </div>
-
-        </div>
-        </div>
-      </div>
     )
   }
 
@@ -246,7 +178,11 @@ export class ImportWallet extends PureComponent {
               </div>
             </Card>
 
-            <Modal visible={this.state.isModal} children={this.renderModalChildren()}/>
+            <Modal 
+              visible={this.state.isModal} 
+              children={this.renderModalChildren()} 
+              title="Import by Private Key"
+              onModalClose={this.onModalClose}/>
           </GridCell>
         </Grid>
 

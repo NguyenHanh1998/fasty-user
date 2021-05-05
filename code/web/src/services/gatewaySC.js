@@ -149,4 +149,8 @@ export class GatewaySC {
       return this.sendRawTx(signedRawTx, retryCount + 1);
     }
   }
+
+  getTransactionUrl(txid) {
+    return `${networkConfigs.explorerEndpoint}/tx/${txid}`;
+  }
 }

@@ -8,17 +8,15 @@ import numeral from 'numeral';
 // UI Imports
 import { Grid, GridCell } from '../../ui/grid'
 const { default: WalletMenu } = require('./common/Menu');
-import styles from '../../styles/screens/ImportScreen/ImportScreen'
-import { Modal } from '../../ui/modal';
 import { H4 } from '../../ui/typography';
-import { black } from '../../ui/common/colors';
 
 // App Imports
 import { messageShow, messageHide } from '../common/api/actions'
-import { getListTransactions } from './api/actions'
+import { getListTransactions, getTransactionDetails } from './api/actions'
 import EmptyMessage from '../common/EmptyMessage'
 import Loading from '../common/Loading'
 import TransactionDetailModal from '../../ui/modal/TransactionDetailModal';
+import { timeFormatterAsText } from '../../utils/converter';
 
 class TransactionHistory extends PureComponent {
 
@@ -34,12 +32,24 @@ class TransactionHistory extends PureComponent {
     this.props.getListTransactions()
   }
 
+  // componentWillReceiveProps(nextProps) {
+  //   if(nextProps.transaction.details) {
+  //     this.setState({ isModal: true });
+  //   } 
+  // }
+
   onModalClose = () => {
     this.setState({ isModal: false })
   }
 
+  seeTransactionDetail(orderId) {
+    this.setState({ isModal: true });
+    this.props.getTransactionDetails(orderId);
+  }
+
   render() {
     const { isLoading, list } = this.props.transactions
+    const { isTransactionLoading, details } = this.props.transaction
     return (
       <div>
         <Helmet>
@@ -81,7 +91,7 @@ class TransactionHistory extends PureComponent {
                             </td> */}
 
                             <td>
-                              { new Date(parseInt(createdAt)).toDateString() }
+                              { timeFormatterAsText(updatedAt, 'DD/MM/YYYY') }
                             </td>
 
                             <td>
@@ -99,7 +109,7 @@ class TransactionHistory extends PureComponent {
                                   cursor: 'pointer',
                                   fontSize: '20px',
                                   color: '#7367F0'
-                                  }} onClick={() => {this.setState({isModal: true})}}>Views</H4>
+                                  }} onClick={() => {this.seeTransactionDetail(id)}}>Views</H4>
                             </td>
                           </tr>
                         ))
@@ -112,10 +122,15 @@ class TransactionHistory extends PureComponent {
                 </tbody>
               </table>
 
-              <TransactionDetailModal 
-                visible={this.state.isModal}
-                onModalClose={this.onModalClose}
-              />
+              {
+                isTransactionLoading ?
+                  <Loading message="loading transaction details..."/>
+                : <TransactionDetailModal 
+                    visible={this.state.isModal}
+                    onModalClose={this.onModalClose}
+                    transaction={details ? details : null}
+                  />
+              }
             </GridCell>
           </Grid>
         </div>
@@ -129,13 +144,16 @@ TransactionHistory.propTypes = {
   transactions: PropTypes.object.isRequired,
   getListTransactions: PropTypes.func.isRequired,
   messageShow: PropTypes.func.isRequired,
-  messageHide: PropTypes.func.isRequired
+  messageHide: PropTypes.func.isRequired,
+  getTransactionDetails: PropTypes.func.isRequired,
+  transaction: PropTypes.object.isRequired,
 }
 
 function transactionsHistoryState(state) {
   return {
-    transactions: state.transactions
+    transactions: state.transactions,
+    transaction: state.transaction
   }
 }
 
-export default connect(transactionsHistoryState, { getListTransactions, messageHide, messageShow }) (TransactionHistory)
+export default connect(transactionsHistoryState, { getListTransactions, getTransactionDetails, messageHide, messageShow }) (TransactionHistory)

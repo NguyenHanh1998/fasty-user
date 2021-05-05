@@ -84,3 +84,10 @@ export function convertBytesToUint128Number (bytes) {
   const hex = Web3.utils.bytesToHex(bytes16)
   return Web3.utils.hexToNumberString(hex)
 }
+
+export function timeFormatterAsText (time, format) {
+  if (!time || !format) {
+    return ''
+  }
+  return formatLocalTimeInSeconds(Math.ceil(time / 1000), format)
+}
