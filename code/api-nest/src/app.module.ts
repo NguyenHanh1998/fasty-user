@@ -18,6 +18,7 @@ import { AddressesModule } from './modules/addresses/addresses.module';
 import { TransactionsService } from './modules/transactions/transactions.service';
 import { TransactionsController } from './modules/transactions/transactions.controller';
 import { TransactionsModule } from './modules/transactions/transactions.module';
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { TransactionsModule } from './modules/transactions/transactions.module';
     OrdersModule,
     AddressesModule,
     TransactionsModule,
+    AdminModule,
   ],
   controllers: [AppController, TransactionsController],
   providers: [
