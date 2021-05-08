@@ -161,3 +161,8 @@ export const ContractMethod = {
 export enum WithdrawalMode {
   NORMAL = 'normal',
 }
+
+export enum UserRole {
+  USER = 'USER',
+  ADMIN = 'ADMIN',
+}

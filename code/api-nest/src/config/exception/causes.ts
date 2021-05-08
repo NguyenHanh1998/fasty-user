@@ -256,4 +256,12 @@ export class Causes {
     'Admin currency not found',
     HttpStatus.INTERNAL_SERVER_ERROR,
   );
+
+  /**
+   * environment config
+   */
+  public static ADMIN_ADDRESS_NOT_FOUND = new HttpException(
+    'Admin address not found',
+    HttpStatus.INTERNAL_SERVER_ERROR,
+  );
 }

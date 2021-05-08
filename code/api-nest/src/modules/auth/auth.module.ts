@@ -5,10 +5,10 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Address, User, Wallet, WalletBalance } from '../../database/entities';
+import { Address, EnvConfig, User, Wallet, WalletBalance } from '../../database/entities';
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Wallet, WalletBalance, Address]),
+    TypeOrmModule.forFeature([User, Wallet, WalletBalance, Address, EnvConfig]),
     PassportModule,
     JwtModule.register({
       secret: process.env.SECRET_KEY || 'abcxyz',

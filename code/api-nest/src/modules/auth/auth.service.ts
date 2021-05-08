@@ -5,12 +5,12 @@ import { LoginResponse, UserDetails } from './response/login.dto';
 import * as argon2 from 'argon2';
 import * as redis from 'redis';
 import { encrypt } from '../../shared/Utils';
-import { Address, User, Wallet, WalletBalance } from '../../database/entities';
+import { Address, EnvConfig, User, Wallet, WalletBalance } from '../../database/entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getConnection, Repository } from 'typeorm';
 import { Register } from './request/register.dto';
 import { Causes } from 'src/config/exception/causes';
-import { WithdrawalMode } from 'src/shared/enums';
+import { UserRole, WithdrawalMode } from 'src/shared/enums';
 
 @Injectable()
 export class AuthService {
@@ -28,11 +28,17 @@ export class AuthService {
 
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+
+    @InjectRepository(EnvConfig)
+    private envConfigRepository: Repository<EnvConfig>,
   ) {}
   //login
-  async validateUser(data: Login): Promise<any> {
+  async validateUser(data: Login, isAdmin: boolean): Promise<any> {
     const user = await this.getUserByEmail(data.email);
     if (user) {
+      if (isAdmin && user.role !== UserRole.ADMIN) {
+        return null;
+      }
       //verify hashed password and plain-password
       const isPassword = await argon2.verify(user.password, data.password);
       if (isPassword) {
@@ -43,7 +49,7 @@ export class AuthService {
     return null;
   }
 
-  async login(user: User): Promise<LoginResponse> {
+  async login(user: User, isAdmin: boolean): Promise<LoginResponse> {
     const payload = { username: user.username, userId: user.id };
     const token = this.jwtService.sign(payload);
 
@@ -54,20 +60,29 @@ export class AuthService {
     client.set(`is_validate_${encrypt(token)}`, '1');
 
     // return address with walletid of user
-    //get wallet id
-    const wallet = await this.walletsRepository.findOne({ userId: user.id });
-    if (!wallet) {
-      throw Causes.WALLET_WITH_USER_ID_NOT_EXISTED;
-    }
-
     let address: string = null;
-    // get address
-    const addressRecord = await this.addressesRepository.findOne({
-      walletId: wallet.id,
-      isOperator: false,
-    });
-    if (addressRecord) {
-      address = addressRecord.address;
+    if (!isAdmin) {
+      //get wallet id
+      const wallet = await this.walletsRepository.findOne({ userId: user.id });
+      if (!wallet) {
+        throw Causes.WALLET_WITH_USER_ID_NOT_EXISTED;
+      }
+
+      // get address
+      const addressRecord = await this.addressesRepository.findOne({
+        walletId: wallet.id,
+        isOperator: false,
+      });
+      if (addressRecord) {
+        address = addressRecord.address;
+      }
+    } else {
+      // admin
+      const envConfig = await this.envConfigRepository.findOne({ key: 'ADMIN_ADDRESS' });
+      if (!envConfig) {
+        throw Causes.ADMIN_ADDRESS_NOT_FOUND;
+      }
+      address = envConfig.value;
     }
 
     return {

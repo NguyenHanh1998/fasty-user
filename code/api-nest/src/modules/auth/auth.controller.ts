@@ -1,9 +1,19 @@
-import { Controller, Post, Body, HttpStatus, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpStatus,
+  UseGuards,
+  Req,
+  Query,
+  DefaultValuePipe,
+  ParseBoolPipe,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Login } from './request/login.dto';
 import { LoginResponse } from './response/login.dto';
 import { EmptyObject } from '../../shared/response/emptyObject.dto';
-import { ApiResponse, ApiOperation } from '@nestjs/swagger';
+import { ApiResponse, ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { LoginBase } from './response/loginBase.dto';
 import { Causes } from '../../config/exception/causes';
 import { EmptyObjectBase } from '../../shared/response/emptyObjectBase.dto';
@@ -49,12 +59,20 @@ export class AuthController {
     description: 'Successful',
     type: LoginBase,
   })
-  async login(@Body() data: Login): Promise<LoginResponse | EmptyObject> {
-    const user = await this.authService.validateUser(data);
+  @ApiQuery({
+    name: 'isAdmin',
+    required: false,
+    type: Boolean,
+  })
+  async login(
+    @Body() data: Login,
+    @Query('isAdmin', new DefaultValuePipe(false), ParseBoolPipe) isAdmin: boolean,
+  ): Promise<LoginResponse | EmptyObject> {
+    const user = await this.authService.validateUser(data, isAdmin);
     if (!user) {
       throw Causes.EMAIL_OR_PASSWORD_INVALID;
     }
-    return this.authService.login(user);
+    return this.authService.login(user, isAdmin);
   }
 
   @Post('/logout')
