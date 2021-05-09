@@ -15,4 +15,10 @@ export class Login {
   })
   @IsNotEmpty()
   password: string;
+
+  @ApiProperty({
+    type: Boolean,
+    example: false,
+  })
+  isAdmin?: boolean;
 }

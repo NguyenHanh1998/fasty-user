@@ -59,20 +59,20 @@ export class AuthController {
     description: 'Successful',
     type: LoginBase,
   })
-  @ApiQuery({
-    name: 'isAdmin',
-    required: false,
-    type: Boolean,
-  })
+  // @ApiQuery({
+  //   name: 'isAdmin',
+  //   required: false,
+  //   type: Boolean,
+  // })
   async login(
     @Body() data: Login,
-    @Query('isAdmin', new DefaultValuePipe(false), ParseBoolPipe) isAdmin: boolean,
+    // @Query('isAdmin', new DefaultValuePipe(false), ParseBoolPipe) isAdmin: boolean,
   ): Promise<LoginResponse | EmptyObject> {
-    const user = await this.authService.validateUser(data, isAdmin);
+    const user = await this.authService.validateUser(data);
     if (!user) {
       throw Causes.EMAIL_OR_PASSWORD_INVALID;
     }
-    return this.authService.login(user, isAdmin);
+    return this.authService.login(user, data.isAdmin);
   }
 
   @Post('/logout')

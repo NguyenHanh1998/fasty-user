@@ -33,10 +33,10 @@ export class AuthService {
     private envConfigRepository: Repository<EnvConfig>,
   ) {}
   //login
-  async validateUser(data: Login, isAdmin: boolean): Promise<any> {
+  async validateUser(data: Login): Promise<any> {
     const user = await this.getUserByEmail(data.email);
     if (user) {
-      if (isAdmin && user.role !== UserRole.ADMIN) {
+      if (data.isAdmin && user.role !== UserRole.ADMIN) {
         return null;
       }
       //verify hashed password and plain-password
