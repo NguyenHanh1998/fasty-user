@@ -19,9 +19,15 @@ import { TransactionsService } from './modules/transactions/transactions.service
 import { TransactionsController } from './modules/transactions/transactions.controller';
 import { TransactionsModule } from './modules/transactions/transactions.module';
 import { AdminModule } from './modules/admin/admin.module';
+import { FilesModule } from './modules/files/files.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
+    MulterModule.register({
+      dest: '/images/stock',
+    }),
+    FilesModule,
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot(databaseConfig),
     ServeStaticModule.forRoot({

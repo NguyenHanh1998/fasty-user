@@ -98,7 +98,7 @@ export class ProductDetails {
       (this.currency = product.currency),
       (this.currentOwner = product.currentOwner),
       (this.image = product.image),
-      (this.orderId = product.orderId),
+      (this.orderId = product.orderId) || null,
       (this.createdAt = product.createdAt),
       (this.updatedAt = product.updatedAt);
   }

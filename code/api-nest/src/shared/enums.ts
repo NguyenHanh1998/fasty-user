@@ -166,3 +166,15 @@ export enum UserRole {
   USER = 'USER',
   ADMIN = 'ADMIN',
 }
+
+export enum SortBy {
+  UPDATED_AT = 'updatedAt',
+  DISPLAY_NAME = 'displayName',
+  INITIAL_PRICE = 'initialPrice',
+  ACREAGE = 'area',
+}
+
+export enum SortType {
+  SortTypeASC = 'asc',
+  SortTypeDesc = 'desc',
+}
