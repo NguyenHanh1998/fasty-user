@@ -1,6 +1,8 @@
 import { IPaginationOptions, Pagination } from 'nestjs-typeorm-paginate';
 import * as CryptoJS from 'crypto-js';
 import { SelectQueryBuilder } from 'typeorm';
+import { HttpException, HttpStatus } from '@nestjs/common';
+import { extname } from 'path';
 
 export function nowInMillis(): number {
   return Date.now();
@@ -55,3 +57,37 @@ export function existValueInEnum(type: any, value: any): boolean {
       .filter((k) => type[k] === value).length > 0
   );
 }
+
+// Slug
+export function slugConverted(text: string) {
+  return (
+    text
+      .toString()
+      .toLowerCase()
+      .replace(/\s+/g, '-') // Replace spaces with -
+      .replace(/[^\w\-]+/g, '') // Remove all non-word chars
+      //.replace(/\-\-+/g, '-')         // Replace multiple - with single -
+      .replace(/^-+/, '') // Trim - from start of text
+      .replace(/-+$/, '')
+  ); // Trim - from end of text
+}
+
+export const imageFileFilter = (req, file, callback) => {
+  if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+    return callback(
+      new HttpException('Only image files are allowed!', HttpStatus.BAD_REQUEST),
+      false,
+    );
+  }
+  callback(null, true);
+};
+
+export const editFileName = (req, file, callback) => {
+  const name = file.originalname.split('.')[0];
+  const fileExtName = extname(file.originalname);
+  // const randomName = Array(4)
+  //   .fill(null)
+  //   .map(() => Math.round(Math.random() * 10).toString(10))
+  //   .join('');
+  callback(null, `${name}${fileExtName}`);
+};
