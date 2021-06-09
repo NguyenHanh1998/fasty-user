@@ -67,16 +67,6 @@ export class GatewaySC {
       finalGasLimit = infuraWeb3.utils.toBN('10000000');
     }
 
-    console.log('======params', {
-      chainId: networkConfigs.chainId,
-      data: transactionFunc.encodeABI(),
-      gasLimit: infuraWeb3.utils.toHex(finalGasLimit),
-      gasPrice: infuraWeb3.utils.toHex(gasPrice),
-      nonce: infuraWeb3.utils.toHex(nonce),
-      to: networkConfigs.tokenContractAddress,
-      value: infuraWeb3.utils.toHex(options && options.value ? options.value : 0)
-    });
-
     const rawTx = new EthereumTx({
       chainId: networkConfigs.chainId,
       data: transactionFunc.encodeABI(),

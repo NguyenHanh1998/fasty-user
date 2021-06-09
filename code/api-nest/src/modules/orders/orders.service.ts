@@ -102,7 +102,7 @@ export class OrdersService {
    * @param data
    */
   async createOrder(data: CreateOrder) {
-    const { orderId, productId, txid } = data;
+    const { orderId, productId, txid, product } = data;
     const orderExist = await this.ordersRepository.findOne(orderId);
     if (orderExist) {
       throw InternalException.ORDER_CREATED;
@@ -114,8 +114,8 @@ export class OrdersService {
       throw InternalException.PRODUCT_ID_REQUIRED;
     }
 
-    const product = await this.productsRepository.findOne(productId);
-    if (!product) {
+    const productCreated = await this.productsRepository.findOne(productId);
+    if (!productCreated) {
       throw InternalException.PRODUCT_NOT_FOUND;
     }
 
@@ -175,6 +175,8 @@ export class OrdersService {
           await manager.save(paymentMethods);
         }),
       );
+
+      await manager.update(Product, { id: productId }, product);
 
       await this.updateProductStatusToConfirming(manager, productId);
     });

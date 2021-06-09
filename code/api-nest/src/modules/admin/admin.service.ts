@@ -42,8 +42,8 @@ export class AdminService {
   ) {}
 
   async createNewProduct(data: CreateNewProduct): Promise<ProductDetails> {
-    const { productName, description, type, gender, image, price, currency } = data;
-    const slug = slugConverted(productName);
+    const { name, description, type, gender, image, price, currency } = data;
+    const slug = slugConverted(name);
     const status = ProductStatus.OFFSALE;
     const envConfig = await this.envConfigRepository.findOne('ADMIN_ADDRESS');
     if (!envConfig) {
@@ -52,7 +52,7 @@ export class AdminService {
     }
 
     const product = this.productsRepository.create({
-      name: productName,
+      name,
       slug,
       description,
       type,

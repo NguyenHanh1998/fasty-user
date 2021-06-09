@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsBoolean, IsNumberString, IsNumber } from 'class-validator';
 import { IsArray } from 'class-validator';
 import { Type } from 'class-transformer';
+import { CreateNewProduct } from 'src/modules/admin/request/createNewProduct.dto';
 
 export class CreateOrder {
   @ApiProperty({
@@ -38,6 +39,10 @@ export class CreateOrder {
   @IsArray()
   @Type(() => PaymentMethods)
   public paymentMethods: PaymentMethods[];
+
+  @ApiProperty({})
+  @Type(() => CreateNewProduct)
+  public product: CreateNewProduct;
 }
 
 export class PaymentMethods {

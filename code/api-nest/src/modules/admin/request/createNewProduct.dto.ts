@@ -7,7 +7,7 @@ export class CreateNewProduct {
     example: 'clothes',
   })
   @IsString()
-  public productName: string;
+  public name: string;
 
   @ApiProperty({
     type: String,
