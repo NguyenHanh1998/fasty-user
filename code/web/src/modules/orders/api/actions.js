@@ -24,6 +24,8 @@ export function getEstimateFee(orderId, method, fromAddress, amount, isLoading =
       isLoading
     })
 
+    console.log('...........', orderId, method, fromAddress, amount)
+
     if(!orderId || !method || !fromAddress || !amount) {
       dispatch({
         type: GET_ESTIMATE_FEE_RESPONSE,
@@ -37,6 +39,8 @@ export function getEstimateFee(orderId, method, fromAddress, amount, isLoading =
           fromAddress,
           amount
         );
+
+        console.log('&&&&estmate', estimateFee)
 
         dispatch({
           type: SET_ORDER,

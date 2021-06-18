@@ -31,6 +31,7 @@ class WhatsNew extends PureComponent {
   // Runs on client only
   componentDidMount() {
     this.props.getProductList()
+    console.log('------', this.props.products)
   }
 
   render() {

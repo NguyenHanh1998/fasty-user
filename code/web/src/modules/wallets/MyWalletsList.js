@@ -37,6 +37,7 @@ class MyWalletsList extends PureComponent {
     if(!this.props.wallet.details.ethAddress) {
       this.props.getOneAddress()
       .then(response => {
+        console.log('---77-', this.props.wallet)
         if(this.props.wallet.error && this.props.user.error.length > 0) {
           this.props.messageShow(this.props.wallet.error)
 
@@ -47,6 +48,7 @@ class MyWalletsList extends PureComponent {
           this.props.messageHide()
         }
       }).catch(err => {
+        console.log('----', this.props.wallet)
         this.props.messageShow(this.props.wallet.error)
 
         window.setTimeout(() => {
@@ -73,20 +75,20 @@ class MyWalletsList extends PureComponent {
         <WalletMenu />
 
         {/* Top title bar */}
-        <Grid style={{ backgroundColor: grey }}>
+        {/* <Grid style={{ backgroundColor: grey }}>
           <GridCell style={{ padding: '2em', textAlign: 'center' }}>
             <H3 font="secondary">My Wallet</H3>
 
             <p style={{ marginTop: '1em', color: grey2 }}>The wallet you imported to be listed here. You can import a new wallet.</p>
           </GridCell>
-        </Grid>
+        </Grid> */}
 
         {/* Wallets list */}
-        <Grid>
+        <Grid style={{ backgroundColor: grey }}>
           {
             isLoading
               ? <Loading />
-              : details
+              : details && details.ethAddress
                 ?
                 <GridCell>
                   <WalletItem ethAddress={details.ethAddress} balance={details.balance}/>
@@ -104,7 +106,7 @@ class MyWalletsList extends PureComponent {
 
             {
               this.props.user.isAuthenticated
-                ? details ?
+                ? details && details.ethAddress ?
                   <p style={{ marginBottom: '1em', color: grey2 }}>You only can import one wallet for now!</p>
                   :
                   <Link to={walletRoutes.importWallet.path}>

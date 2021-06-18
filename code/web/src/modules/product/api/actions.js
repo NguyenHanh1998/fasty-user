@@ -30,7 +30,7 @@ export function getList(isLoading = true, forceRefresh = false) {
 
     return axios({
       method: 'get',
-      url: `${routeApi}/products`
+      url: `${routeApi}/products?status=on_sale`,
     })
       .then(response => {
         if (response.status === 200) {

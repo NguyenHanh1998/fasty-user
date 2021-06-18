@@ -20,6 +20,11 @@ export class ProductsController {
     description: 'Get all products',
   })
   @ApiQuery({
+    name: 'key',
+    required: false,
+    type: String,
+  })
+  @ApiQuery({
     name: 'slug',
     required: false,
     type: String,
@@ -28,6 +33,11 @@ export class ProductsController {
     name: 'type',
     required: false,
     type: Number,
+  })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    type: String,
   })
   @ApiQuery({
     name: 'page',
@@ -46,11 +56,13 @@ export class ProductsController {
   })
   async getAllProducts(
     @Query('slug') slug: string,
+    @Query('key') key: string,
     @Query('type') type: number,
+    @Query('status') status: string,
     @Query('page') page = 1,
     @Query('limit') limit = 10,
   ): Promise<PaginationResponse<ProductDetails>> {
-    return this.productsService.getAllProducts({ slug, type }, { page, limit });
+    return this.productsService.getAllProducts({ slug, key, type, status }, { page, limit });
   }
 
   @Get('/related/:product_id')

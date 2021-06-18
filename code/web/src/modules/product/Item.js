@@ -14,12 +14,12 @@ import { routeImage, routes } from '../../setup/routes'
 // Component
 const Item = (props) => {
 
-  const { name, slug, description, image } = props.product
+  const { id, name, slug, description, image } = props.product
 
   return (
     <Link to={routes.product.path(slug)}>
-      <Card style={{ width: '25em', margin: '2.5em auto', backgroundColor: white }}>
-        <img src={routeImage + image} alt={name} style={{ width: '100%' }}/>
+      <Card style={{ width: '20em', height: '22em', margin: '2.5em auto', backgroundColor: white }}>
+        <img src={routeImage + image} alt={name} style={{ width: '250px', height: '250px' }}/>
 
         <div style={{ padding: '1em 1.2em' }}>
           <H4 font="secondary" style={{ color: black }}>{ name }</H4>

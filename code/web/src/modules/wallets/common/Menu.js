@@ -13,9 +13,9 @@ const WalletMenu = () => (
   <Grid style={{ backgroundColor: grey }}>
     <GridCell style={{ padding: '2em', textAlign: 'center' }}>
       <Menu>
-        <MenuItem to={wallet.walletList.path} type="primary" style={{ color: black }}>My Wallet</MenuItem>
+        <MenuItem to={wallet.walletList.path} type="fragment" style={{ color: black }}>My Wallet</MenuItem>
 
-        <MenuItem to={wallet.history.path} type="primary" style={{ color: black }}>History</MenuItem>
+        <MenuItem to={wallet.history.path} type="fragment" style={{ color: black }}>Transaction History</MenuItem>
       </Menu>
     </GridCell>
   </Grid>

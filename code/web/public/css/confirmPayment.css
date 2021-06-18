@@ -27,8 +27,7 @@
 }
 
 .information-wallet__list-card .card-1 {
-  background-image: linear-gradient( 90deg, #CE9FFC 10%, #7367F0 100%);;
-}
+  background-color: #77c9d4;}
 
 .information-wallet__list-card .card .icon {
   max-width: 80px;
@@ -51,11 +50,11 @@
 }
 
 .information-wallet__list-card .card-2 {
-  background-color: rgba(219,63,40,.9);
+  background-color: #015249;;
 }
 
 .information-wallet__list-card .card-3 {
-  background-color: #3e3a39;
+  background-color: #e9c893;
 }
 
 .confirm {

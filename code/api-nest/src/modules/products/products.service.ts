@@ -32,12 +32,17 @@ export class ProductsService {
         searchOptions[i] = null;
       }
     }
-    const { slug, type } = searchOptions;
+    const { slug, key, type, status } = searchOptions;
 
     const products = await this.productsRepository.find({
       where: {
         type: Raw((alias) => `(:type is null or ${alias} = :type)`, { type }),
         slug: Raw((alias) => `(:slug is null or ${alias} = :slug)`, { slug }),
+        name: Raw((alias) => `(:key is null or ${alias} like :search)`, {
+          key,
+          search: `%${key}%`,
+        }),
+        status: Raw((alias) => `(:status is null or ${alias} = :status)`, { status }),
       },
       order: {
         id: 'DESC',

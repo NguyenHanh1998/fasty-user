@@ -36,9 +36,14 @@ export class AuthService {
   async validateUser(data: Login): Promise<any> {
     const user = await this.getUserByEmail(data.email);
     if (user) {
-      if (data.isAdmin && user.role !== UserRole.ADMIN) {
+      console.log('...', user);
+      if (
+        (data.isAdmin && user.role !== UserRole.ADMIN) ||
+        (!data.isAdmin && user.role === UserRole.ADMIN)
+      ) {
         return null;
       }
+
       //verify hashed password and plain-password
       const isPassword = await argon2.verify(user.password, data.password);
       if (isPassword) {

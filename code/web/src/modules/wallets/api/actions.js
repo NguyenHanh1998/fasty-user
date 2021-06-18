@@ -141,6 +141,7 @@ export function getAddressBalance(ethAddress, isLoading = true) {
       isLoading
     })
 
+    console.log('****', ethAddress)
     try{
       const addressBalance = await ethService.getAddressBalance(ethAddress);
       dispatch({
@@ -148,6 +149,7 @@ export function getAddressBalance(ethAddress, isLoading = true) {
         balance: addressBalance.balance
       })
     } catch(err) {
+      console.log('----', err)
       dispatch
     }
   }

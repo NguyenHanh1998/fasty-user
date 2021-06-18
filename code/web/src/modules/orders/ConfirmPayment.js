@@ -27,10 +27,12 @@ class ConfirmPayment extends PureComponent {
     super(props)
 
     this.state = {
+      isLoadingConfirmPayment: false,
       offerPrice: 0,
       orderId: null,
       estimateFee: 0,
-      isLoadingModal: false
+      isLoadingModal: false,
+      ethAddress: '',
     }
   }
 
@@ -44,11 +46,15 @@ class ConfirmPayment extends PureComponent {
         estimateFee: formatEstimateFee
       })
     }
+    if(nextProps.wallet.details.ethAddress !== this.props.wallet.details.ethAddress) {
+      this.setState({ ethAddress: nextProps.wallet.details.ethAddress })
+    }
   }
 
   componentDidMount() {
     this.props.getOneAddress()
       .then(response => {
+        console.log(',,,', this.props.wallet)
         if(this.props.wallet.error && this.props.wallet.error.length > 0) {
           this.props.messageShow(this.props.wallet.error)
 
@@ -67,6 +73,7 @@ class ConfirmPayment extends PureComponent {
       })
 
     if(!this.props.wallet.details.balance) {
+      console.log('<>>>>>', this.state.ethAddress)
       this.props.getAddressBalance(this.props.wallet.details.ethAddress)
     }
 
@@ -77,6 +84,8 @@ class ConfirmPayment extends PureComponent {
       offerPrice: offerPrice,
       orderId: this.props.location.state.orderId
     })
+
+    console.log(',,;;;-,', this.props.wallet)
 
     //get est fee
     this.props.getEstimateFee(
@@ -91,7 +100,7 @@ class ConfirmPayment extends PureComponent {
     event.preventDefault();
 
     this.props.messageShow('Confirming your payment, please wait...');
-
+    this.setState({ isLoadingConfirmPayment: true })
     const confirmPaymentParams = {
       orderId: this.state.orderId, 
       wallet: this.props.wallet.details, 
@@ -254,13 +263,13 @@ class ConfirmPayment extends PureComponent {
                 <div className="row ant-row row-action">
                 <div className="ant-col label ant-col-md-6"></div>
                   <div className="ant-col field ant-col-md-18" style={{ textAlign: 'center' }}>
-                    {this.props.wallet.isLoading || this.props.order.isLoading ?
+                    {(this.props.wallet.isLoading || this.props.order.isLoading) && ! this.state.isLoadingConfirmPayment  ?
                       <Button theme="secondary" disabled={true}>
                         <Icon size={1.2} style={{ color: white }}>check</Icon>Estimating Fee...
                       </Button>
                       :
                       <Button type="submit" theme="secondary">
-                        <Icon size={1.2} style={{ color: white }}>check</Icon> Confirm Payment
+                        <Icon size={1.2} style={{ color: white }} disabled={this.state.isLoadingConfirmPayment}>check</Icon> Confirm Payment
                       </Button>
                     }
                   </div>

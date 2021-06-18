@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
 import BigNumber from 'bignumber.js';
 import numeral from 'numeral';
+import * as _ from 'lodash'
 
 // UI Imports
 import { Grid, GridCell } from '../../ui/grid'
@@ -17,6 +18,8 @@ import EmptyMessage from '../common/EmptyMessage'
 import Loading from '../common/Loading'
 import TransactionDetailModal from '../../ui/modal/TransactionDetailModal';
 import { timeFormatterAsText } from '../../utils/converter';
+import { APP_URL_API } from '../../setup/config/env';
+import { TakingStatuses } from '../../constants';
 
 class TransactionHistory extends PureComponent {
 
@@ -40,6 +43,19 @@ class TransactionHistory extends PureComponent {
 
   onModalClose = () => {
     this.setState({ isModal: false })
+  }
+
+  computedStatus (status) {
+    const takingStatus = _.find(TakingStatuses, t => t.value === status)
+    if (takingStatus.text === 'Sold') {
+      return 'Success'
+    }
+    return takingStatus.text;
+  }
+
+  computedStatusColor (status) {
+    const takingStatus = _.find(TakingStatuses, t => t.value === status)
+    return takingStatus.textColor;
   }
 
   seeTransactionDetail(orderId) {
@@ -70,7 +86,9 @@ class TransactionHistory extends PureComponent {
                     {/* <th>No</th> */}
                     <th>Date Time</th>
                     <th>Product Name</th>
+                    <th>Image</th>
                     <th>Price</th>
+                    <th>Status</th>
                     <th style={{ textAlign: 'center' }}>Action</th>
                   </tr>
                 </thead>
@@ -84,7 +102,7 @@ class TransactionHistory extends PureComponent {
                           </td>
                         </tr>
                       : list.length > 0 
-                        ? list.map(({ id, productName, price, currency, createdAt, updatedAt }) => (
+                        ? list.map(({ id, productName, price, currency, image, status, createdAt, updatedAt }) => (
                           <tr key={id}>
                             {/* <td>
                               1
@@ -99,16 +117,27 @@ class TransactionHistory extends PureComponent {
                             </td>
 
                             <td>
+                              <img
+                                src={`${APP_URL_API}${image}`}
+                                style={{ width: '150px', height: '130px' }}
+                              />
+                            </td>
+
+                            <td>
                               { numeral(new BigNumber(price)
                                 .dividedBy(Math.pow(10, 18)).toNumber())
-                                .format('0,0.[00000000]') } { currency }
+                                .format('0,0.[00000000]') } { currency.toUpperCase() }
+                            </td>
+
+                            <td className={this.computedStatusColor(status)}>
+                                { this.computedStatus(status)}
                             </td>
 
                             <td style={{ textAlign: 'center' }}> 
                                 <H4 style={{
                                   cursor: 'pointer',
                                   fontSize: '20px',
-                                  color: '#7367F0'
+                                  color: '#2d78dd'
                                   }} onClick={() => {this.seeTransactionDetail(id)}}>Views</H4>
                             </td>
                           </tr>

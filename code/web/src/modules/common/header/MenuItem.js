@@ -14,10 +14,13 @@ const MenuItem = (props) => {
 
   const isActiveRoute = () => {
     const currentSection = props.location.pathname.split('/')[1]
+    // const toSection = 
 
+    console.log('...', type)
     return (currentSection === to.split('/')[1] && currentSection === section)
       || props.location.pathname === to
       || active
+      // || currentSection === to.split('/')[1]
   }
 
   return (
@@ -27,11 +30,13 @@ const MenuItem = (props) => {
         Object.assign({
           padding: '0.6em 1em',
           textTransform: 'uppercase',
-          color: white
+          color: '#000000'
         }, isActiveRoute() ? {
-          backgroundImage: (type === 'secondary' ? secondary : primary),
-          borderRadius: '1.4em',
-          boxShadow: level1
+          // backgroundImage: (type === 'secondary' ? secondary : 'fragment' ? '' : primary),
+          borderRadius: (type === 'fragment' ? '' : '1.4em'),
+          // boxShadow: (type === 'fragment' ? '' : level1),
+          color: '#4caf50',
+          fontWeight: 'bold'
         } : style)
       }
     >

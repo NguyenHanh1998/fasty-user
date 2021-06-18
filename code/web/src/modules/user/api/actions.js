@@ -39,7 +39,8 @@ export function login(userCredentials, isLoading = true) {
       url: `${routeApi}/login`,
       data: {
         email: userCredentials.email,
-        password: userCredentials.password
+        password: userCredentials.password,
+        isAdmin: false
       }
     })
       .then(response => {
@@ -64,6 +65,7 @@ export function login(userCredentials, isLoading = true) {
 
           loginSetUserLocalStorageAndCookie(token, user)
         }
+        console.log(';;;;',error)
 
         dispatch({
           type: LOGIN_RESPONSE,
@@ -71,10 +73,17 @@ export function login(userCredentials, isLoading = true) {
         })
       })
       .catch(error => {
-        dispatch({
-          type: LOGIN_RESPONSE,
-          error: 'Please try again'
-        })
+        if (error.response) {
+          dispatch({
+            type: LOGIN_RESPONSE,
+            error: error.response.data.meta.message
+          })
+        } else {
+          dispatch({
+            type: LOGIN_RESPONSE,
+            error: 'Please try again'
+          })
+        }
       })
   }
 }

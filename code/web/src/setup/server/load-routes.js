@@ -29,6 +29,7 @@ export default function (app) {
   // Match any Route
   app.get('*', (request, response) => {
 
+    console.log('///cookie', request.cookies)
     // Check for auth
     if (request.cookies.auth) {
       const auth = JSON.parse(request.cookies.auth)

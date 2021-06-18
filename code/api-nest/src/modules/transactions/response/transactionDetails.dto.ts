@@ -27,6 +27,30 @@ export class TransactionDetails {
 
   @ApiProperty({
     type: String,
+    example: 'A monthly supply of trendy clothes for men.',
+  })
+  description: string;
+
+  @ApiProperty({
+    type: Number,
+    example: 1,
+  })
+  type: number;
+
+  @ApiProperty({
+    type: Number,
+    example: 1,
+  })
+  gender: number;
+
+  @ApiProperty({
+    type: String,
+    example: '/images/stock/belt-female.jpg',
+  })
+  image: string;
+
+  @ApiProperty({
+    type: String,
     example: '0x329bf3bff1d595d5f8186413cb52e1bd9f160f6d8b1c007966aeba45d4fca6f0',
   })
   public txId: string;
@@ -58,6 +82,10 @@ export class TransactionDetails {
   constructor(transaction: any) {
     this.orderId = transaction.orderId;
     this.productName = transaction.productName;
+    this.description = transaction.description;
+    this.type = transaction.type;
+    this.gender = transaction.gender;
+    this.image = transaction.image;
     this.buyerAddress = transaction.buyerAddress;
     this.sellerAddress = transaction.sellerAddress;
     this.txId = transaction.txId;

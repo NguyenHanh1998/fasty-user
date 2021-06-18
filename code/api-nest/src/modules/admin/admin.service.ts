@@ -171,9 +171,13 @@ export class AdminService {
     const product = await this.productsRepository.findOne({ id: order.productId });
     order.productName = product.name;
 
-    order.offerPrice = order.amount;
+    order.price = order.amount;
     order.currency = order.currency;
     order.orderId = order.id;
+    order.gender = product.gender;
+    order.type = product.type;
+    order.description = product.description;
+    order.image = product.image;
     //txId
     const tx = await this.orderTxRepository.findOne({
       orderId: order.id,

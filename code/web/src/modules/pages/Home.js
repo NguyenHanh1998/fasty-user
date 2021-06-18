@@ -33,12 +33,12 @@ const Home = (props) => (
     }}>
       {/* SEO */}
       <Helmet>
-        <title>Monthly supply of clothes and accessories for Men and Women - Crate</title>
+        <title>Monthly supply of clothes and accessories for Men and Women - Fasty</title>
       </Helmet>
 
       {/* Content */}
       <GridCell>
-        <H1 font="secondary" style={{ textShadow: textLevel1 }}>Crate</H1>
+        <H1 font="secondary" style={{ textShadow: textLevel1 }}>Fasty</H1>
 
         <H4 style={{ textShadow: textLevel1, marginTop: '0.5em' }}>
           Your monthly subscription of trendy clothes and accessories

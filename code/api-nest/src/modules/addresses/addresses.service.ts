@@ -33,6 +33,7 @@ export class AddressesService {
     addressRecord.currency = Currency.ETH;
     addressRecord.address = address;
     addressRecord.secret = privateKey;
+    addressRecord.userId = user.id;
 
     addressRecord = await this.addressesRepository.save(addressRecord);
     return new CreateAddress(addressRecord);

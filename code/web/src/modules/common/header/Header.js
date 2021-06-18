@@ -23,8 +23,7 @@ import wallet from '../../../setup/routes/wallet'
 const Header = (props) => {
   return (
     <header style={{
-      backgroundImage: primaryGradient,
-      boxShadow: level1,
+      backgroundColor: '#ffffff',
       padding: '0 2em',
       height: '5em',
       position: 'fixed',

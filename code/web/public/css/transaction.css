@@ -94,6 +94,8 @@
   flex-direction: column;
   justify-content: center;
   margin-top: 25px;
+  margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 .col-11 {
@@ -102,7 +104,7 @@
 }
 
 .tdm__header-name {
-  color: #000000;
+  color: #4caf50;
   font-size: 30px;
   font-weight: 600;
   text-align: left;
@@ -205,4 +207,8 @@
 
 .tdm__box-date {
   margin: 10px 0;
+}
+
+.text-sold {
+  color: #009b47 !important;;
 }

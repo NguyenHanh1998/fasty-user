@@ -60,6 +60,11 @@ export class TransactionsService {
       response.items.map(async (result: any) => {
         result.productName = result.product.name;
         result.price = result.product.price;
+        result.gender = result.product.gender;
+        result.type = result.product.type;
+        result.description = result.product.description;
+        result.image = result.product.image;
+        result.status = result.product.status;
         return new TransactionHistory(result);
       }),
     );

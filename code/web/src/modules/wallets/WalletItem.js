@@ -14,7 +14,7 @@ const WalletItem = (props) => {
         boxShadow: '0 0 0 0'
         }}>
         <div style={{
-          backgroundImage: 'linear-gradient( 90deg, #FEB692 10%, #EA5455 100%)',
+          backgroundImage: 'linear-gradient( 90deg, #4caf50 10%, #ffffff 100%)',
           borderRadius: '30px',
           padding: '35px',
           boxShadow: '20px 20px 0 0 rgba(51,0,101,.15)'
@@ -35,11 +35,12 @@ const WalletItem = (props) => {
 
           {/* body */}
           <div style={{ 
-            color: '#fff',
+            // color: '#fff',
             paddingLeft: '35px',
             paddingTop: '30px' 
           }}>
             <H4 style={{
+              color: '#ffffff',
               fontWeight: '700',
               marginBottom: '10px',
               fontSize: '20px',
@@ -60,8 +61,11 @@ const WalletItem = (props) => {
               alignItems: 'center'
             }}>
               <div style={{
-                display: 'grid'
-              }}>ETH {balance}</div>
+                display: 'flex',
+              }}> 
+                <div style={{color: '#ffffff', marginRight: '20px'}}>ETH</div>  
+                {balance}
+              </div>
             </div>
           </div>
         </div>

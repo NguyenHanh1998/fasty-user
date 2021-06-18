@@ -1,12 +1,12 @@
 // Colors
 
-export const primary = '#7367F0'
+export const primary = '#4caf50'
 
-export const primaryAccent = '#CE9FFC'
+export const primaryAccent = '#4caf50'
 
-export const secondary = '#EA5455'
+export const secondary = '#4caf50'
 
-export const secondaryAccent = '#FEB692'
+export const secondaryAccent = '#4caf50'
 
 export const white = '#ffffff'
 
