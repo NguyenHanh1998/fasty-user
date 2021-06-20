@@ -212,9 +212,9 @@
 }
 
 .confirm .row-priority .ant-radio-group-solid .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
-  background-color: #EA5455;
-  background-image: linear-gradient( 90deg, #FEB692 10%, #EA5455 100%);
-  color: #fff;
+  background-color: #ffffff;
+  /* background-image: linear-gradient( 90deg, #FEB692 10%, #EA5455 100%); */
+  color: #4caf50;
 }
 
 .confirm .row-action {

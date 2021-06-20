@@ -9,7 +9,7 @@ import { level1, level2, level3, level4 } from '../common/shadows'
 
 // Component
 const Button = (props) => {
-  const { children, type, disabled, theme, ...other } = props
+  const { children, type, disabled, theme, backgroundColor, ...other } = props
 
   return (
     <button type={type} disabled={disabled} {...other}>
@@ -28,8 +28,8 @@ const Button = (props) => {
           font-size: 1em;
           color: ${ theme !== 'none' ? white : black };
           box-shadow: ${ theme !== 'none' ? level2 : 'none' };
-          background-color: ${ theme === 'primary' ? primary : theme === 'secondary' ? secondary : 'transparent' };
-          background-image: ${ theme === 'primary' ? primaryGradient : theme === 'secondary' ? secondaryGradient : 'none' };
+          background-color: ${backgroundColor ? backgroundColor :  theme === 'primary' ? primary : theme === 'secondary' ? secondary : 'transparent' };
+          background-image: ${backgroundColor ? '' : theme === 'primary' ? primaryGradient : theme === 'secondary' ? secondaryGradient : 'none' };
         }
         button:hover {
           box-shadow: ${ level3 };

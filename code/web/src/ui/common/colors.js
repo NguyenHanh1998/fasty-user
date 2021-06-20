@@ -4,9 +4,9 @@ export const primary = '#4caf50'
 
 export const primaryAccent = '#4caf50'
 
-export const secondary = '#4caf50'
+export const secondary = '#dba734'
 
-export const secondaryAccent = '#4caf50'
+export const secondaryAccent = '#dba734'
 
 export const white = '#ffffff'
 

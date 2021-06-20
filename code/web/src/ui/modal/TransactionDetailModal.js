@@ -45,7 +45,7 @@ const TransactionDetailModal = (props) => {
                     position: 'absolute',
                     right: '50px',
                     top: '50%',
-                    width: '25px',
+                    width: '15px',
                     transform: 'translateY(-50%)',
                     cursor: 'pointer',
                     display: 'inline-block',

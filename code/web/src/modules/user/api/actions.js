@@ -106,11 +106,15 @@ export function setWalletLocalStorageAndCookie(wallet) {
 // Register a user
 export function register(userDetails) {
   return dispatch => {
-    return axios.post(routeApi, mutation({
-      operation: 'userSignup',
-      variables: userDetails,
-      fields: ['id', 'name', 'email']
-    }))
+    return axios({
+      method: 'post',
+      url: `${routeApi}/register`,
+      data: {
+        email: userDetails.email,
+        username: userDetails.name,
+        password: userDetails.password
+      }
+    })
   }
 }
 

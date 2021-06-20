@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import { Helmet } from 'react-helmet'
 import PropTypes from 'prop-types'
-import { withRouter } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import numeral from 'numeral'
 import { BigNumber } from 'bignumber.js'
@@ -17,6 +17,7 @@ import { messageShow, messageHide } from '../common/api/actions'
 import { getAddressBalance, getOneAddress } from '../wallets/api/actions'
 import { getEstimateFee, confirmPayment } from '../orders/api/actions'
 import { SmartContractMethod } from '../../constants'
+import orderRoutes from '../../setup/routes/order'
 
 const network = process.env.APP_NETWORK
 const networkConfigs = require(`../../configs/eth/network/${network}.json`)
@@ -84,8 +85,6 @@ class ConfirmPayment extends PureComponent {
       offerPrice: offerPrice,
       orderId: this.props.location.state.orderId
     })
-
-    console.log(',,;;;-,', this.props.wallet)
 
     //get est fee
     this.props.getEstimateFee(
@@ -268,9 +267,11 @@ class ConfirmPayment extends PureComponent {
                         <Icon size={1.2} style={{ color: white }}>check</Icon>Estimating Fee...
                       </Button>
                       :
-                      <Button type="submit" theme="secondary">
-                        <Icon size={1.2} style={{ color: white }} disabled={this.state.isLoadingConfirmPayment}>check</Icon> Confirm Payment
-                      </Button>
+                      <Link to={orderRoutes.processPayment.path}>
+                        <Button type="submit" theme="secondary">
+                          <Icon size={1.2} style={{ color: white }} disabled={this.state.isLoadingConfirmPayment}>check</Icon> Confirm Payment
+                        </Button>
+                      </Link>
                     }
                   </div>
                 </div>
