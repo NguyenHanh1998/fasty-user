@@ -49,7 +49,7 @@ export class ImportWallet extends PureComponent {
   onSubmit = (event) => {
     event.preventDefault();
 
-    this.props.messageShow('Importing, please wait...')
+    this.props.messageShow('Importing wallet, please wait...')
 
     this.props.importWallet(this.state.privateKey)
       .then(response => {

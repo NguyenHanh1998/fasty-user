@@ -109,7 +109,8 @@ export function confirmPayment(params, isLoading = true) {
                 const takeOrder = true;
                 dispatch({
                   type: SET_TAKE_ORDER_RESPONSE,
-                  takeOrder
+                  takeOrder,
+                  orderTxid: dataRequest.txid
                 })
               }
             })

@@ -154,7 +154,7 @@ class Detail extends PureComponent {
                             format('0,0.[00000000]')} ETH</H4>
                         </div>
 
-                        <Button theme="secondary" style={{ marginTop: '3em' }} onClick={this.takeOrderByEth.bind(this)} >Buy Now <Icon size={1.2} style={{ color: white }}>navigate_next</Icon></Button>
+                        <Button theme="primary" style={{ marginTop: '3em' }} onClick={this.takeOrderByEth.bind(this)} >Buy Now <Icon size={1.2} style={{ color: white }}>navigate_next</Icon></Button>
                       </GridCell>
                     </Grid>
 

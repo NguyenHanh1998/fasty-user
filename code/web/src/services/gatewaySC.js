@@ -51,7 +51,7 @@ export class GatewaySC {
     return await this.contract.methods[method](...params).call()
   }
 
-  async constructRawTx(fromAddress, method, params, options, priority = 2) {
+  async constructRawTx(fromAddress, method, params, options, priority = 1) {
     const nonce = await infuraWeb3.eth.getTransactionCount(fromAddress, 'pending');
     
     const gasPrice = await this.getGasPrice(priority);

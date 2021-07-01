@@ -12,6 +12,7 @@ const orderInitialState = {
   isLoading: false,
   estimateFee: null,
   takeOrder: false,
+  orderTxid: '',
 }
 
 export const order = (state = orderInitialState, action) => {
@@ -58,7 +59,8 @@ export const order = (state = orderInitialState, action) => {
         ...state,
         isLoading: false,
         error: null,
-        takeOrder: action.takeOrder
+        takeOrder: action.takeOrder,
+        orderTxid: action.orderTxid
       }
     default:
       return state

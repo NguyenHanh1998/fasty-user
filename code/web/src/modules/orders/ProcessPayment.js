@@ -10,7 +10,7 @@ import homeRoutes from '../../setup/routes/home'
 
 const gateway = new GatewaySC();
 const ProcessPayment = (props) => {
-  const { txid } = props
+  const { txid } = props.location.state.orderTxid;
 
   return (
     <div>

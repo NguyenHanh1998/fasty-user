@@ -34,6 +34,7 @@ class ConfirmPayment extends PureComponent {
       estimateFee: 0,
       isLoadingModal: false,
       ethAddress: '',
+      priorityId: 1,
     }
   }
 
@@ -53,27 +54,29 @@ class ConfirmPayment extends PureComponent {
   }
 
   componentDidMount() {
-    this.props.getOneAddress()
-      .then(response => {
-        console.log(',,,', this.props.wallet)
-        if(this.props.wallet.error && this.props.wallet.error.length > 0) {
+    // if(!this.props.wallet.details.ethAddress) {
+      this.props.getOneAddress()
+        .then(response => {
+          console.log(',,,', this.props.wallet)
+          if(this.props.wallet.error && this.props.wallet.error.length > 0) {
+            this.props.messageShow(this.props.wallet.error)
+
+            window.setTimeout(() => {
+              this.props.messageHide()
+            }, 5000)
+          } else {
+            this.props.messageHide()
+          }
+        }).catch(err => {
           this.props.messageShow(this.props.wallet.error)
 
           window.setTimeout(() => {
             this.props.messageHide()
           }, 5000)
-        } else {
-          this.props.messageHide()
-        }
-      }).catch(err => {
-        this.props.messageShow(this.props.wallet.error)
+        })
+    // }
 
-        window.setTimeout(() => {
-          this.props.messageHide()
-        }, 5000)
-      })
-
-    if(!this.props.wallet.details.balance) {
+    if(!this.props.wallet.details.balance || this.props.wallet.details.balance === 0) {
       console.log('<>>>>>', this.state.ethAddress)
       this.props.getAddressBalance(this.props.wallet.details.ethAddress)
     }
@@ -93,6 +96,29 @@ class ConfirmPayment extends PureComponent {
       this.props.wallet.details.ethAddress,
       this.props.location.state.offerPrice,
     )
+  }
+
+  onPriorityPress(priority) {
+    const estimateFee = this.props.order.estimateFee;
+    const formatEstimateFee = numeral(new BigNumber(estimateFee)
+        .dividedBy(Math.pow(10, 18)).toNumber())
+        .format('0,0.[00000000]');
+    let est = 0;
+    switch (priority) {
+      case 0:
+        est = formatEstimateFee * 0.75;
+        break;
+      case 2:
+        est = formatEstimateFee * 1.25;
+        break;
+      case 1:
+        est = formatEstimateFee;
+        break; 
+    }
+    this.setState({
+      estimateFee: est,
+      priorityId: priority
+    })
   }
 
   onSubmit = (event) => {
@@ -117,6 +143,13 @@ class ConfirmPayment extends PureComponent {
           }, 5000)
         } else {
           this.props.messageHide()
+          console.log(',,,,,,,,,,,,', this.props.order.orderTxid)
+          this.props.history.push({
+            pathname: orderRoutes.processPayment.path,
+            state: {
+              orderTxid: this.props.order.orderTxid
+            }
+          })
         }
       }).catch(error => {
         this.props.messageShow(this.props.order.error)
@@ -229,19 +262,19 @@ class ConfirmPayment extends PureComponent {
                   <div className="ant-col label ant-col-md-6">Priority</div>
                     <div className="ant-col field ant-col-md-18">
                       <div className="ant-radio-group ant-radio-group-solid">
-                        <label className="ant-radio-button-wrapper">
+                        <label onClick={() => this.onPriorityPress(0)} className={this.state.priorityId === 0 ? "ant-radio-button-wrapper ant-radio-button-wrapper-checked" : 'ant-radio-button-wrapper'}>
                           <span className="ant-radio-button">
                           </span>
                           <span>Low</span>
                         </label>
 
-                        <label className="ant-radio-button-wrapper ant-radio-button-wrapper-checked">
+                        <label onClick={() => this.onPriorityPress(1)} className={this.state.priorityId === 1 ? "ant-radio-button-wrapper ant-radio-button-wrapper-checked" : 'ant-radio-button-wrapper'}>
                           <span className="ant-radio-button">
                           </span>
                           <span>Medium</span>
                         </label>
 
-                        <label className="ant-radio-button-wrapper">
+                        <label onClick={() => this.onPriorityPress(2)} className={this.state.priorityId === 2 ? "ant-radio-button-wrapper ant-radio-button-wrapper-checked" : 'ant-radio-button-wrapper'}>
                           <span className="ant-radio-button">
                           </span>
                           <span>High</span>
@@ -263,15 +296,13 @@ class ConfirmPayment extends PureComponent {
                 <div className="ant-col label ant-col-md-6"></div>
                   <div className="ant-col field ant-col-md-18" style={{ textAlign: 'center' }}>
                     {(this.props.wallet.isLoading || this.props.order.isLoading) && ! this.state.isLoadingConfirmPayment  ?
-                      <Button theme="secondary" disabled={true}>
+                      <Button theme="primary" disabled={true}>
                         <Icon size={1.2} style={{ color: white }}>check</Icon>Estimating Fee...
                       </Button>
                       :
-                      <Link to={orderRoutes.processPayment.path}>
-                        <Button type="submit" theme="secondary">
+                        <Button type="submit" theme="primary">
                           <Icon size={1.2} style={{ color: white }} disabled={this.state.isLoadingConfirmPayment}>check</Icon> Confirm Payment
                         </Button>
-                      </Link>
                     }
                   </div>
                 </div>

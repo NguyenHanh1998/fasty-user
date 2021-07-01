@@ -31,7 +31,7 @@ const HowItWorks = (props) => (
       <GridCell style={{ padding: '2em', textAlign: 'center' }}>
         <H3 font="secondary">How it works</H3>
 
-        <p style={{ marginTop: '1em', color: grey2 }}>Just 3 easy steps to subscribe and receive your monthly
+        <p style={{ marginTop: '1em', color: grey2 }}>Just 4 easy steps to subscribe and receive your monthly
           subscription
           of trendy clothes and accessories</p>
       </GridCell>
@@ -50,30 +50,44 @@ const HowItWorks = (props) => (
       <GridCell style={{ background: `url('${ APP_URL }/images/stock/how-it-works/1.jpg') center top no-repeat` }}/>
     </Grid>
 
-    {/* 2 - Receive a Fix Delivery */}
+    {/* 2 - Import your wallet*/}
     <Grid>
-      <GridCell style={{ background: `url('${ APP_URL }/images/stock/how-it-works/2.jpg') center top no-repeat` }}/>
+      <GridCell style={{ background: `url('${ APP_URL }/images/stock/how-it-works/import_eth_wallet.jpg') center top`, width: '900px', margin: '0 40px' }}/>
 
       <GridCell justifyCenter={true} style={{ textAlign: 'center', padding: '8em 0em' }}>
         <Icon size={4} style={{ color: grey3, textShadow: textLevel1 }}>looks_two</Icon>
 
-        <H4 style={{ marginTop: '0.5em', textTransform: 'uppercase' }}>Receive a Fix Delivery</H4>
+        <H4 style={{ marginTop: '0.5em', textTransform: 'uppercase' }}>Import your Ethereum Wallet.</H4>
 
-        <p style={{ marginTop: '0.5em', color: grey3 }}>Get 3 to 5 pieces of clothing or accessories delivered to your door.</p>
+        <p style={{ marginTop: '0.5em', color: grey3 }}>Import your Ethereum Wallet with Ethereum address.</p>
       </GridCell>
     </Grid>
 
-    {/* 3 - Keep what you want */}
+    {/* 3 - Purchase a product */}
     <Grid>
       <GridCell justifyCenter={true} style={{ textAlign: 'center', padding: '8em 0em' }}>
         <Icon size={4} style={{ color: grey3, textShadow: textLevel1 }}>looks_3</Icon>
+
+        <H4 style={{ marginTop: '0.5em', textTransform: 'uppercase' }}>Purchase one product</H4>
+
+        <p style={{ marginTop: '0.5em', color: grey3 }}>Choose and purchase one product by ETH.</p>
+      </GridCell>
+
+      <GridCell style={{ background: `url('${ APP_URL }/images/stock/how-it-works/1.jpg') center top no-repeat` }}/>
+    </Grid>
+
+    {/* 4 - Keep what you want */}
+    <Grid>
+      <GridCell style={{ background: `url('${ APP_URL }/images/stock/how-it-works/3.jpg') center top no-repeat` }}/>
+
+      <GridCell justifyCenter={true} style={{ textAlign: 'center', padding: '8em 0em' }}>
+        <Icon size={4} style={{ color: grey3, textShadow: textLevel1 }}>looks_4</Icon>
 
         <H4 style={{ marginTop: '0.5em', textTransform: 'uppercase' }}>Keep what you want</H4>
 
         <p style={{ marginTop: '0.5em', color: grey3 }}>Only pay for what you keep. Returns are easy and free.</p>
       </GridCell>
 
-      <GridCell style={{ background: `url('${ APP_URL }/images/stock/how-it-works/3.jpg') center top no-repeat` }}/>
     </Grid>
 
     {/* Bottom call to action bar */}
