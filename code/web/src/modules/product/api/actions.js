@@ -1,6 +1,7 @@
 // Imports
 import axios from 'axios'
 import { query, mutation } from 'gql-query-builder'
+import { number } from 'prop-types'
 
 // App Imports
 import { routeApi } from '../../../setup/routes'
@@ -20,7 +21,7 @@ export const PRODUCTS_GET_RELATED_LIST_FAILURE = 'PRODUCTS/GET_RELATED_LIST_FAIL
 // Actions
 
 // Get list of products
-export function getList(isLoading = true, forceRefresh = false) {
+export function getList(isLoading = true, gender = null, forceRefresh = false) {
   return dispatch => {
     dispatch({
       type: PRODUCTS_GET_LIST_REQUEST,
@@ -30,7 +31,7 @@ export function getList(isLoading = true, forceRefresh = false) {
 
     return axios({
       method: 'get',
-      url: `${routeApi}/products?status=on_sale`,
+      url: `${routeApi}/products?status=on_sale&gender=${gender}`,
     })
       .then(response => {
         if (response.status === 200) {

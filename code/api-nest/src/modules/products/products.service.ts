@@ -28,11 +28,11 @@ export class ProductsService {
     }
 
     for (const i in searchOptions) {
-      if (!searchOptions[i]) {
+      if (!searchOptions[i] || searchOptions[i] === 'null') {
         searchOptions[i] = null;
       }
     }
-    const { slug, key, type, status } = searchOptions;
+    const { slug, key, type, status, gender } = searchOptions;
 
     const products = await this.productsRepository.find({
       where: {
@@ -43,6 +43,7 @@ export class ProductsService {
           search: `%${key}%`,
         }),
         status: Raw((alias) => `(:status is null or ${alias} = :status)`, { status }),
+        gender: Raw((alias) => `(:gender is null or ${alias} = :gender)`, { gender }),
       },
       order: {
         id: 'DESC',

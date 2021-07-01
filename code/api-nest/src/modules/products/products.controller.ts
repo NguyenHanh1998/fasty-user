@@ -35,6 +35,11 @@ export class ProductsController {
     type: Number,
   })
   @ApiQuery({
+    name: 'gender',
+    required: false,
+    type: Number,
+  })
+  @ApiQuery({
     name: 'status',
     required: false,
     type: String,
@@ -58,11 +63,12 @@ export class ProductsController {
     @Query('slug') slug: string,
     @Query('key') key: string,
     @Query('type') type: number,
+    @Query('gender') gender: number,
     @Query('status') status: string,
     @Query('page') page = 1,
     @Query('limit') limit = 10,
   ): Promise<PaginationResponse<ProductDetails>> {
-    return this.productsService.getAllProducts({ slug, key, type, status }, { page, limit });
+    return this.productsService.getAllProducts({ slug, key, type, status, gender }, { page, limit });
   }
 
   @Get('/related/:product_id')

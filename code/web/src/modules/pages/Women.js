@@ -27,7 +27,7 @@ class Women extends PureComponent {
 
   // Runs on client only
   componentDidMount() {
-    this.props.getProductList()
+    this.props.getProductList(true, 2)
   }
 
   render () {
@@ -76,10 +76,10 @@ class Women extends PureComponent {
             {
               this.props.user.isAuthenticated
                 ? <Link to={crateRoutes.list.path}>
-                    <Button theme="secondary" style={{ marginTop: '1em' }}>Get Subscription</Button>
+                    <Button theme="primary" style={{ marginTop: '1em' }}>Get Subscription</Button>
                   </Link>
                 : <Link to={userRoutes.signup.path}>
-                    <Button theme="secondary" style={{ marginTop: '1em' }}>Get Started</Button>
+                    <Button theme="primary" style={{ marginTop: '1em' }}>Get Started</Button>
                   </Link>
             }
           </GridCell>
