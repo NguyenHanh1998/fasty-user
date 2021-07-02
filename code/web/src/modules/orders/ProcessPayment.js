@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 import { APP_URL } from '../../setup/config/env'
 import { H4, H5 } from '../../ui/typography'
@@ -10,8 +10,7 @@ import homeRoutes from '../../setup/routes/home'
 
 const gateway = new GatewaySC();
 const ProcessPayment = (props) => {
-  const { txid } = props.location.state.orderTxid;
-
+  const txid = useLocation().state.orderTxid;
   return (
     <div>
       <div className="container-md">
@@ -36,7 +35,7 @@ const ProcessPayment = (props) => {
                     </a>
                     <div style={{ height: '30px' }}></div>
                     <Link to={homeRoutes.whatsNew.path}>
-                      <Button type="submit" theme="secondary">
+                      <Button type="submit" theme="primary">
                         Continue Purchase
                       </Button>
                     </Link>

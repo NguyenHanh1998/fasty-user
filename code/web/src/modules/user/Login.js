@@ -146,7 +146,7 @@ class Login extends Component {
               </Link>
 
               {/* Form submit */}
-              <Button type="submit" theme="secondary" disabled={isLoading}>
+              <Button type="submit" theme="primary" disabled={isLoading}>
                 Login
                 <Icon size={1.2} style={{ color: white }}>navigate_next</Icon></Button>
             </div>

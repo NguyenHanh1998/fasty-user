@@ -143,7 +143,6 @@ class ConfirmPayment extends PureComponent {
           }, 5000)
         } else {
           this.props.messageHide()
-          console.log(',,,,,,,,,,,,', this.props.order.orderTxid)
           this.props.history.push({
             pathname: orderRoutes.processPayment.path,
             state: {
